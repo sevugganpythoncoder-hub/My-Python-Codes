@@ -1,0 +1,67 @@
+> user = int(input("How much runs did you smash in that ball?:"))
+... user2 = int(input("How much runs did you smash in that ball 2?:"))
+... name = input("Name:")
+... name2 = input("Name2:")
+... # 1. This is the Blueprint (The Class)
+... class Player:
+...     def __init__(self, name):
+...         self.name = name
+...         self.runs = 0
+...
+...     def hit_six(self):
+...         self.runs += user
+...         print(f"BOOM! {self.name} smashed it for 6!")
+...     def hit_four(self):
+...         self.runs += user2
+...         print(f"BOOM {self.name} just hit a four!")
+...
+... # 2. This is the "Object" (Actual Player)
+... striker = Player(name)
+...
+... # 3. Using the Object
+... striker.hit_six()
+... print(f"{striker.name} is now on {striker.runs} runs.")
+...
+... non_striker = Player(name2)
+... non_striker.hit_four()
+... print(f"{non_striker.name} is now on {non_striker.runs} runs.")
+
+Script 2:
+
+...
+How much runs did you smash in that ball?:6
+How much runs did you smash in that ball 2?:6
+Name:"Classy"
+Name2:"Gerogington"
+BOOM! Classy smashed it for 6!
+Classy is now on 6 runs.
+BOOM Gerogington just hit a four!
+Gerogington is now on 6 runs.
+>>>
+>>> user = int(input("How much runs did you smash in that ball?:"))
+... user2 = int(input("How much runs did you smash in that ball 2?:"))
+... name = input("Name:")
+... name2 = input("Name2:")
+... # 1. This is the Blueprint (The Class)
+... class Player:
+...     def __init__(self, name):
+...         self.name = name
+...         self.runs = 0
+...
+...     def hit_six(self):
+...         self.runs += user
+...         print(f"BOOM! {self.name} smashed it for 6!")
+...     def hit_four(self):
+...         self.runs += user2
+...         print(f"BOOM {self.name} just hit a four!")
+...
+... # 2. This is the "Object" (Actual Player)
+... striker = Player(name)
+...
+... # 3. Using the Object
+... striker.hit_six()
+... print(f"{striker.name} is now on {striker.runs} runs.")
+...
+... non_striker = Player(name2)
+... non_striker.hit_four()
+... print(f"{non_striker.name} is now on {non_striker.runs} runs.")
