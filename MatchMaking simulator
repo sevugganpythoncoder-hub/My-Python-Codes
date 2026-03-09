@@ -1,0 +1,77 @@
+import random 
+
+selection = random.choice(["Leila","Max","Sujith"])
+
+#Skill Based Match making
+
+name  = input("Enter Name of Player:")
+gender = input("Male or Female?[M/F]")
+level = float(input("Enter level:"))
+
+Player1_stats = {"Name" : name,"Gender" : gender,"Level" : level }
+balance = 100
+
+#Matchmaking
+while True:
+    Askuser = input("Do you want to Enable Match making?[Y/N]").upper()
+
+    if Askuser == "Y":
+        print("----Match Making commencing...----")
+        print("Please wait...")
+        print(f"Match Making completed Its {name} vs {selection}!")
+        h = int(input("How many points would you like to wager?:"))
+        if h >= balance:
+            print("Insufficient funds")
+        random2 = random.choice(["Attacking","Defending","Spl attacking"])
+        i = int(input(f"{selection} is {random}! What would you like to do?[1)Defend,2)Attack 3) Spl Attack"))
+        if i == 1:
+            print(f"You used defend  for {random}")
+            if random2 == "Defending":
+                print("You matched each other")
+                result == "Draw"
+            elif random2 == "Attacking":
+                print(f"OOf you lost to {selection}")
+                print("game lost")
+                result = "Lost"
+            else:
+                print(f"OOf you lost to {selection}")
+                print("game lost")
+                result = "Lost"
+        elif i == 2:
+            print(f"You used attack  for {random}")
+            if random2 == "Defending":
+                print("You attacked her and defeated her!")
+                result = "Win"
+            elif random2 == "Attacking":
+                print("You matched each other!")
+                result = "Draw"
+            else:
+                print(f"OOf you lost to {selection}")
+                print("game lost")
+                result = "lost"
+        else:
+            print(f"You used spl attack  for {random}")
+            if random2 == "Attacking":
+                print("You won!")
+                result = "win"
+            elif random2 == "Defending":
+                print("You won!")
+                result = "win"
+            else:
+                print("You matched each other!")
+                result = "Draw"
+            if result == "Win":
+                Player1_stats["Level"] += h
+            elif result == "Draw":
+                Player1_stats["Level"] += 50
+            else:
+                Player1_stats["Level"] -= h
+    else:
+        print("System closing...")
+    Askuser3 = input("Would You like To play Again?[Y/N]")
+    if Askuser3 == "Y":
+        continue
+    else:
+        break
+print("\nFinal Stats!---")
+print(Player1_stats)
