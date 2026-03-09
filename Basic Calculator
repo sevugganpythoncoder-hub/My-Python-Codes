@@ -1,0 +1,46 @@
+while True:
+    x = int(input("Enter Number 1:"))
+    y = int(input("Enter Number 2:"))
+    operand = input("Which operand type do you want to use? (+,-,/,//,*,square(S)):")
+    
+ 
+    
+    if operand == "+":
+        result = x + y
+        print(f"{result}")
+    elif operand == "-":
+        result2 = x - y
+        print(f"{result2}")
+    elif operand == "/":
+        if y == 0:
+            print("Number Cannot be didvided by 0")
+        else:
+            result3 = x / y
+        print(f"{result2}")
+    elif operand == "//":
+        if y == 0:
+            print("Number Cannot be divided by 0")
+        else:
+            result4 = x // y
+            print(f"{result4}")
+    elif operand == "*":
+        result5 = x * y
+        print(result5)
+    elif operand == "S":
+        dess = input("Square which no?[X/Y]")
+        dessi = int(input("How many times?"))
+        if dess == "X":
+            result10 = x ** dessi
+            print(result10)
+        elif dess == "Y":
+            result11 = y ** dessi
+            print(result11)
+    else:
+        print("Invalid Operand")
+    des = input("Would you like to use calculator again?[Y/N]")
+    
+    if des == "Y":
+        continue
+    else:
+        print("Session Ended")
+        break
