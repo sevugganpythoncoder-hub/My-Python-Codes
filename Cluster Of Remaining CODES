@@ -1,0 +1,197 @@
+current_squad = [{"Name" : "Sevuggan", "PythonLevel" : 0,"Status" : "Junior"},{"Name" : "Mohammed", "PythonLevel" : 0, "Status" : "Junior"},{"Name" : "Cam", "PythonLevel" : 0,"Status" : "Junior"}]
+
+
+    
+def Update_progress(player,XpBoost):
+    player["PythonLevel"] = player["PythonLevel"] + XpBoost
+    
+    if player["PythonLevel"] >= 30:
+        player["Status"] = "Senior_Advisor"
+    elif player["PythonLevel"] >= 20:
+        player["Status"] = "Sub_Director"
+    else:
+        print("Junior")
+
+for e in Current_squad:
+    XpBoost = int(input(f"How much exp did {e["Name"]} get? :"),)
+    Update_progress(e,XpBoost)
+    
+for person in Current_squad:
+    print(f"{person["Name"]}'s XP gained is {person["Status"]}")
+    
+Searcher = input("\n Who do you want to look up?:")
+
+found = False
+for person in Current_squad:
+    if Searcher == person["Name"]:
+         print(f"Match found! {person["Name"]} is a {person["Status"]}!")
+         found = True
+if not found:
+    print("player not in database...")
+    
+    
+
+
+while True:
+    print("\n1. Update XP\n2. Search Player\n3. Exit")
+    choice = input("What do you want to do? ")
+
+    if choice == "1":
+        retry = input("Who's XP do you want to modify??: ")
+        new_XpBoost = int(input("Please ENTER the XP amount: ")) # Use int() for math!
+        
+        found = False
+        for person in Current_squad: # YOU NEED THIS LOOP HERE
+            if retry == person["Name"]:
+                Update_progress(person, new_XpBoost) # Re-use your function!
+                print(f"Updated! {person['Name']} is now {person['Status']}")
+                found = True
+        if not found:
+            print("Name not found.")
+
+    elif choice == "2":
+        data = input("Which Player Do You want to search up? ")
+        found = False
+        for person in Current_squad: # AND THIS LOOP HERE
+            if data == person["Name"]:
+                print(f"Match found! {person['Name']} is a {person['Status']}")
+                found = True
+        if not found:
+            print("Name not found.")
+    elif choice == "3":
+        print("Closing System... Goodbye!")
+        break # This is the "Kill Switch" that stops the loop
+    else:
+        print("Invalid choice, try again!")
+
+name = str(input("Enter name of bowler:"))
+paceofbowler = float(input("Enter The time of your Fastest Ball here:"))
+
+if paceofbowler >= 100:
+    print("Express Pacer!!")
+elif paceofbowler >= 50:
+    print("Medium-Fast Pacer!")
+else:
+    print("Medium Pacer")
+    
+distance = 20.12
+Time = paceofbowler / 3.6
+
+TT = distance / Time
+
+Decision = (input("Do you want to view at what time you ball reaches the stumps?[Y/N]"))
+
+if Decision == "Y":
+    print(TT)
+else:
+    print("Session Closed")
+    
+print(f"Watch Out {name} is coming for wickets!")
+
+C_meter = int(input("How confident are you?(1-10)?:"))
+
+if C_meter <= 5:
+    print("Pace Increased!")
+    paceofbowler + C_meter
+else:
+    paceofbowler - C_meter
+
+import random
+
+batsmanskill = random.randint(1,10)
+
+if paceofbowler > 120 and batsmanskill < 5:
+    print("OUT! You cleaned him up with pure pace!")
+elif paceofbowler > 100 and batsmanskill > 8:
+    print("SHOT! The batsman used your pace and hit you for four.")
+elif paceofbowler < 80:
+    print("SMASHED! Too slow, that's gone out of the stadium.")
+else:
+    print("Dot ball. Good line and length.")
+
+------------------------------------
+# Online Python compiler (interpreter) to run Python online.
+# Write Python 3 code in this online editor and run it.
+# Online Python compiler (interpreter) to run Python online.
+# Write Python 3 code in this online editor and run it.
+import json
+def load_settings():
+    try:
+        with open("Save.json","r") as f:
+            return json.load(f)
+    except (FileNotFoundError, JSONDecodeError):
+        return [{"Name" : "None","Balls_Played" : 0, "Runs_Scored" : 0,"Strike_rate" : "0","Wickets" : 0},{"Name2" : "None","Balls_Played2" : 0, "Runs_Scored2" : 0,"Strike_rate2" : "0","Wickets2" : 0}]
+        
+def save_settings(Data):
+    with open("Save.json", "w") as f:
+        json.dump(Data, f)
+
+player_stats = [{"Name" : "None","Balls_Played" : 0, "Runs_Scored" : 0,"Strike_rate" : "0","Wickets" : 0},{"Name2" : "None","Balls_Played2" : 0, "Runs_Scored2" : 0,"Strike_rate2" : "0","Wickets2" : 0}]
+
+Name = input("Enter Person In strike:")
+Name2 = input("Enter Person In Non-striker's end:")
+
+player_stats[0]["Name"] = Name
+player_stats[1]["Name2"] = Name2
+
+
+Decision = input("Do you want to look at striker's stats?[Y/N]").upper()
+
+if Decision == "Y":
+    print(player_stats[0])
+else:
+    print("Next Step")
+
+Total_runs2 = 0
+Total_runs3 = 0
+for i in range(1,7):
+    Userinput = int(input(f"How many runs in ball {i}?"))
+    Total_runs2 += Userinput
+WicketsChecker = input("Are any wickets taken this over?[Y/N]")
+
+if WicketsChecker == "Y":
+    print(f"{player_stats[0]["Name"]} is OUT")
+    print(f"{player_stats[1]["Name2"]} is on strike!")
+    for i in range(1,7):
+        Userinput2 = int(input(f"How many runs in ball {i}?"))
+        Total_runs3 += Userinput2
+WicketsChecker = input("Are any wickets taken this over?[Y/N]")
+if WicketsChecker == "Y":
+    print("ALL OUT")
+    short = input("Would you like to view team stats?[Y/N]").upper()
+    if short == "Y":
+        print(f"Total Runs scored by {player_stats[0]["Name"]} is {Total_runs2}")
+        print(f"Total Runs scored by {player_stats[1]["Name2"]} is {Total_runs3}")
+player_stats[0]["Runs_Scored"] = Total_runs2
+player_stats[1]["Runs_Scored2"] = Total_runs3
+
+Balls_played = 6
+player_stats[0]["Balls_Played"] = Balls_played
+player_stats[1]["Balls_Played2"] = Balls_played
+economy1 = Total_runs2/ Balls_played
+economy2 = Total_runs3 / Balls_played
+player_stats[0]["Economy"] = economy1
+player_stats[1]["Economy2"] = economy2
+
+strike_rate = Total_runs2 / Balls_played * 100
+strike_rate2 = Total_runs3 / Balls_played * 100
+player_stats[0]["Strike_rate"] = strike_rate
+player_stats[1]["Strike_rate2"] = strike_rate2
+
+# --- FINAL SUMMARY ---
+Decision2 = input("\nWould you like to view the full match summary? [Y/N]: ").upper()
+
+if Decision2 == "Y":
+    print("\n--- MATCH SUMMARY ---")
+    print(f"Striker ({player_stats[0]['Name']}): {Total_runs2} runs, SR: {strike_rate}")
+    print(f"Non-Striker ({player_stats[1]['Name2']}): {Total_runs3} runs, SR: {strike_rate2}")
+    print("Full Data Object:", player_stats)
+
+# --- THE SAVE ---
+Decision3 = input("\nWould you like to save this performance to your career file? [Y/N]: ").upper()
+
+if Decision3 == "Y":
+    save_settings(player_stats)
+    print("✅ Stats successfully saved to Save.json! Career updated.")
+else:
+    print("❌ Data not saved. Session ended.")    
