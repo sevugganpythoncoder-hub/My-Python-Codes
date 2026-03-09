@@ -1,0 +1,1 @@
+Hello To the people reading this Text I just wanna say that but looking at my github profile you are encouraging me to practise my skill everyday and i appreciate that! Hope to get a job in python in Hight school(i am still in hight school)
