@@ -2,7 +2,7 @@
 user = (input("Enter username : "))
 print(f"Hello {user}")
 calculator_history = []
-system_data = {"Notifications" : "OFF","Mode" : "Dark","Profession" : "Nil","Hobbies" : "Nil"}
+system_data = {"Notifications" : "OFF","Mode" : "Dark","Hobbies" : "Chess"}
 import json
 def load_settings():
     global system_data,calculator_history
@@ -27,7 +27,7 @@ while True:
     print("Please select the following things to do")
     print("[1] Enable/Disable Notifications")
     print("[2] Change Mode[Light/dark]")
-    print("[3] Enale calculator mode")
+    print("[3] Enable calculator mode")
     print("[4] Check calculator history")
     print("[5] Save and exit")
     ask = int(input("Which of the following would you like to use?:"))
