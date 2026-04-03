@@ -1,9 +1,9 @@
 import random
-
+# User input and Usage of Py.library
 battle = random.choice(["Ponyta","Nidoran","Tododile"])
 crit = random.choice(["Critical Hit!","no Crits"])
 name = input("Enter Trainer name:")
-
+# OOP logic-
 class Pokemon:
     def __init__(self,pokemon,trainer,move,moves):
         self.pokemon = pokemon
