@@ -1,4 +1,5 @@
 #REPOST
+# --Save block(Data presistance.Json)
 import json
 
 def load_settings():
@@ -11,7 +12,7 @@ def load_settings():
 def save_settings(Data):
     with open("Save.json","w") as f:
         json.dump(Data, f, indent=4)
-
+# User inputs and Temo Data saves
 Player = str(input("Would you like to ON the cricket system?[Y/N]")).upper()
 if Player == "Y":
     ask = int(input("are you a bowler or batter?[type 1 or 2]:"))
@@ -55,11 +56,13 @@ if Player == "Y":
         player_stats2["name"] = name
         if balls == 0:
                 print("INVALID")
+   # Main code execution                
         else:
             strike_rate = runs/balls * 100
             player_stats2["Strike_rate"] = strike_rate
             print(f"stats of {player_stats2["name"]} is {player_stats2}")
         feedback = input("Did you enjoy your experience using MYCRICKET?[Y/N]")
+        #Feedback
         if feedback == "Y":
             print("Thank you")
         else:
@@ -70,6 +73,7 @@ if Player == "Y":
             print("successfully saved!")
         else:
             ("Moving On..")
+# System closure
 elif Player == "N":
     print("System closing...")
 else:
