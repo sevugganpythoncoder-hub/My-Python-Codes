@@ -1,0 +1,110 @@
+# system
+user = (input("Enter username : "))
+print(f"Hello {user}")
+calculator_history = []
+system_data = {"Notifications" : "OFF","Mode" : "Dark","Hobbies" : "Chess"}
+# Data saves
+import json
+def load_settings():
+    global system_data,calculator_history
+    try:
+        with open("Autosave.json","r") as f:
+            full_data =  json.load(f)
+            system_data = full_data["settings"]
+            calculator_history = full_data["history"]
+            print("Settings saved")
+    except (FileNotFoundError,json.JSONDecodeError):
+        return "File Not Found"
+load_settings()
+def save_settings(data_to_save, history_to_save):
+    # This combines everything into one dictionary
+    final_package = {"settings": data_to_save, "history": history_to_save}
+    
+    with open("Autosave.json", "w") as f:
+        # We save the 'final_package' we just made
+        json.dump(final_package, f)
+    print("--- Save Successful ---")
+  # System Outputs and Loops
+while True:
+    print("Please select the following things to do")
+    print("[1] Enable/Disable Notifications")
+    print("[2] Change Mode[Light/dark]")
+    print("[3] Enable calculator mode")
+    print("[4] Check calculator history")
+    print("[5] Save and exit")
+    ask = int(input("Which of the following would you like to use?:"))
+  # System Changes
+    if ask == 1:
+        d = system_data["Notifications"]
+        s = input(f"Would you like to Change notifications current setting: {d}[Y/N]").upper()
+        if s == "Y":
+            print("Changed successfully")
+            system_data["Notifications"] = "ON"
+            op = input("View system settings?[Y/N]")
+            if op == "Y":
+                print(system_data)
+        else:
+            print("No changes")       
+    elif ask == 2:
+        s1 = input(f"Would you like to change Mode? Current setting:{system_data["Mode"]}[Y/N]:").upper()
+        if s1 == "Y":
+            print('Changed Successfully')
+            system_data["Mode"] = "Light"
+            op = input("View system changes?:")
+            if op == "Y":
+                print(system_data)
+        else:
+            print("No changes")
+  # calculator
+    elif ask == 3:
+        print("\nOpening Calculator...")
+        while True:
+            operand = input("Choose opeand type[Add[+],Subtract[-],Multiply[*],Powers[**],Floor division[//] or Division[/]]")
+            def calculator(x,y):
+                if operand == "+":
+                    return x + y
+                elif operand == "-":
+                    return x - y
+                elif operand == "*":
+                    return x * y
+                elif operand == "**":
+                    return x ** y
+                elif operand == "//":
+                    if y == 0:
+                        print("Invalid denominator")
+                    else:
+                        return x//y
+                elif operand == "/":
+                    if y == 0:
+                        print("Invalid denominator")
+                    else:
+                        return x/ y
+                else:
+                    return "Invalid Operand"
+                    
+            Num1 = int(input("Enter Number 1:"))
+            Num2 = int(input("Enter Number 2:"))
+            result = calculator(Num1,Num2)
+            print(f"Answer : {result}")
+            calculator_history.append(result)
+            again = input("Do you want to use calculator again?[Y/N]:")
+            if again == "Y":
+                continue
+            else:
+                break
+  # History
+    elif ask == 4:
+        print("\n printing calculator history.....")
+        print(calculator_history)
+   # Save and exit     
+    elif ask == 5:
+        v = input("Would you like to save and exit?:").upper()
+        if v == "Y":
+            save_settings(system_data,calculator_history)
+            break
+        else:
+            continue
+    else:
+        print("Invalid Choice")
+        
+        
