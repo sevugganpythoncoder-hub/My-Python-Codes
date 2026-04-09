@@ -7,12 +7,12 @@ def load_settings():
         with open("Formula.json","r") as f:
             return json.load(f)
     except(FileNotFoundError, json.JSONDecodeError):
-        return "History not Found/Appended"
+        return []
 def save_settings(Data):
     with open("Formula.json", "w") as f:
         return json.dump(Data,f)
         
-History = []
+History = load_settings()
 
 # Formula Calculator:
 while True:
@@ -56,7 +56,7 @@ while True:
         print("\n Lens Formula:")
         f =  float(input("Enter value of Focal length:"))
         u1 = float(input("Enter value of Object distance:"))
-        denominator = (1/f) + (1/u)
+        denominator = (1/f) + (1/u1)
         if denominator == 0:
             print("Image Distance is at infinity!")
             History.append("Infinity")
@@ -99,4 +99,3 @@ while True:
             continue
         else:
             pass
-    
