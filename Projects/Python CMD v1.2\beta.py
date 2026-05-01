@@ -18,7 +18,7 @@ print("NOTE THERE WILL BE A LOT OF BUG SINCE THIS IS ONLY THE BETA.If you have a
 py = platform.python_version()
 date = datetime.datetime.now()
 print(fr"""
-Python CMD Copyright Access [V.1.1/v beta] [Future updates]
+Python CMD Copyright Access [V.1.2/v beta] [Future updates]
 64-bit Python {py} | {date}
 Type 'Copyright' or 'help' for more info
 """)
