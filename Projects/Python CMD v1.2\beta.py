@@ -175,14 +175,14 @@ while True:
         save_settings(datas)
     elif inputs.startswith("where "):
         filename = inputs[6:].strip()
-        results = glob.glob(filename)
-        if results:
-            for match in results:
+        for root, dirs, files in os.walk(os.getcwd()):
+            # Use glob.glob to match the pattern in each specific folder
+            for match in glob.glob(os.path.join(root, pattern)):
                 print(os.path.abspath(match))
-        else:
-            print(f"INFO: Could not find files for the given pattern(s): {filename}")
-        datas.append(fr"{name} searched Files in os")
-        logging.info(f"checked system at {date}")
+                found = True
+        if not found:
+            print(f"INFO: Could not find '{pattern}' in {os.getcwd()} or subfolders.")
+        datas.append(fr" {name} Deep searched: {pattern}")
         save_settings(datas)
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
