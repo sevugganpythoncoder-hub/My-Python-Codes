@@ -10,14 +10,16 @@ import shutil
 import platform
 import socket
 import json 
+import glob
 
 # Starting
-print("NOTE THERE WILL BE A LOT OF BUG SINCE THIS IS ONLY THE BETA.If you have any suggestions Please Don't hesitate to text me in  my Githubpage(sevugganPythoncoder)")
+print("NOTE THERE WILL BE A LOT OF BUG SINCE THIS IS ONLY THE BETA.If you have any suggestions Please Don't hesitate to text me in  my Githubpage(sevugganPythoncoder) and This cmd will be updated until the NOTE is changed.")
 
+py = platform.python_version()
 date = datetime.datetime.now()
 print(fr"""
 Python CMD Copyright Access [V.1.1/v beta] [Future updates]
-64-bit Python 3.14.x | {date}
+64-bit Python {py} | {date}
 Type 'Copyright' or 'help' for more info
 """)
 
@@ -136,9 +138,11 @@ while True:
                 -Random : Picks a random option
                 -run [Command] : Execute system tasks
                 -cd [Path] : Change directory
-                -file [File] : Copies/moves Directories
+                -file : Copies/moves Directories
                 -systemdata: View IP/Hostname
                 -cmd history: View session data
+                -sysinfo : View OS and python version
+                -where [file] : Shows where the given file is located
                 """)
   # copyright
     elif inputs == "copyright":
@@ -164,6 +168,22 @@ while True:
         """)
         print("-" * 60)
         input("Press ENTER to return to the terminal...")
+    elif inputs == "sysinfo":
+        print(f"OS : {platform.system()} {platform.release()}")
+        print(f"Current Version pf py : {py}")
+        datas.append(f"{name} checked systeminfo")
+        save_settings(datas)
+    elif inputs.startswith("where "):
+        filename = inputs[6:].strip()
+        results = glob.glob(filename)
+        if results:
+            for match in results:
+                print(os.path.abspath(match))
+        else:
+            print(f"INFO: Could not find files for the given pattern(s): {filename}")
+        datas.append(fr"{name} searched Files in os")
+        logging.info(f"checked system at {date}")
+        save_settings(datas)
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
         
