@@ -174,7 +174,7 @@ while True:
         datas.append(f"{name} checked systeminfo")
         save_settings(datas)
     elif inputs.startswith("where "):
-        filename = inputs[6:].strip()
+        pattern = inputs[6:].strip()
         found = False
         for root, dirs, files in os.walk(os.getcwd()):
             # Use glob.glob to match the pattern in each specific folder
