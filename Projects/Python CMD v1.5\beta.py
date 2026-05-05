@@ -11,6 +11,7 @@ import platform
 import socket
 import json 
 import glob
+import requests
 
 # Starting
 print("NOTE THERE WILL BE A LOT OF BUG SINCE THIS IS ONLY THE BETA.If you have any suggestions Please Don't hesitate to text me in  my Githubpage(sevugganPythoncoder) and This cmd will be updated until the NOTE is changed.")
@@ -145,6 +146,7 @@ while True:
                 -where [file] : Shows where the given file is located
                 del [Filename/dir name] : Deletes File/dir path(if admin)
                 clear history : Clears Cache and CMD history
+                ip-search : Fetches live Public External IP Address.
                 """)
   # copyright
     elif inputs == "copyright":
@@ -216,6 +218,19 @@ while True:
         save_settings(datas)
         print(datas)
         print("System cleared")
+    elif inputs == "ip-search":
+        print("\nFetching external System data....")
+        time.sleep(5)
+        try:
+            response = requests.get('https://api.ipify.org?format=json', timeout=5)
+            ip_data = response.json()
+            print(f"Public IP Address: {ip_data['ip']}")
+            datas.append(f"Used ip-search by {name}")
+            save_settings(datas)
+            logging.info(f"{name} fetched external IP successfully.")
+        except requests.exceptions.RequestExceptions as e:
+            print(f"404 Error Failed To connect Successfully to server {e} ")
+            logging.warning(fr"Exception Failed {e}")
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
         
