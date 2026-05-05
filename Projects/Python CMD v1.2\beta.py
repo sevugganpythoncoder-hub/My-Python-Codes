@@ -185,6 +185,29 @@ while True:
             print(f"INFO: Could not find '{pattern}' in {os.getcwd()} or subfolders.")
         datas.append(fr" {name} Deep searched: {pattern}")
         save_settings(datas)
+    elif inputs.startswith("del "):
+        filename = inputs[4:].strip()
+        try:
+            def deletefile(filename):
+                try:
+                    if os.path.exists(filename):
+                        os.remove(filename)
+                        print(fr"File {filename} has been {'.strip()'.title()}ed from the system OS")
+                        logging.info(f"{name} deleted {filename}")
+                    elif os.path.isdir(filename):
+                        shutil.rmtree(filename)
+                        print(f"Path {filename} has been {'.strip()'.title()}ed from system OS")
+                    else:
+                        print("ERROR : File Not Found".center(50,"-"))
+                except PermissionError:
+                    print(" ERROR : Access Denied (Run as Admin) ".center(50, "!"))
+
+            deletefile(filename) 
+            
+        except Exception as exc:
+             logging.info(f"{name} logged due to technical error ERROR NO: 0XCB39266")
+             raise RuntimeError("Error : Exited system Due to Win error")
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
+        
         
