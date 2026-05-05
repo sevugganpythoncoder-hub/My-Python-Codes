@@ -18,7 +18,7 @@ print("NOTE THERE WILL BE A LOT OF BUG SINCE THIS IS ONLY THE BETA.If you have a
 py = platform.python_version()
 date = datetime.datetime.now()
 print(fr"""
-Python CMD Copyright Access [V.1.2/v beta] [Future updates]
+Python CMD Copyright Access [V.1.4/v beta] [Future updates]
 64-bit Python {py} | {date}
 Type 'Copyright' or 'help' for more info
 """)
@@ -144,6 +144,7 @@ while True:
                 -sysinfo : View OS and python version
                 -where [file] : Shows where the given file is located
                 del [Filename/dir name] : Deletes File/dir path(if admin)
+                clear history : Clears Cache and CMD history
                 """)
   # copyright
     elif inputs == "copyright":
@@ -208,6 +209,13 @@ while True:
         except Exception as exc:
              logging.info(f"{name} logged due to technical error ERROR NO: 0XCB39266")
              raise RuntimeError("Error : Exited system Due to Win error")
+    elif inputs == "clear history":
+        print(f"Clearing {name}'s CMD history....")
+        time.sleep(10)
+        datas = []
+        save_settings(datas)
+        print(datas)
+        print("System cleared")
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
         
