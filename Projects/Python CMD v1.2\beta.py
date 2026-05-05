@@ -143,6 +143,7 @@ while True:
                 -cmd history: View session data
                 -sysinfo : View OS and python version
                 -where [file] : Shows where the given file is located
+                del [Filename/dir name] : Deletes File/dir path(if admin)
                 """)
   # copyright
     elif inputs == "copyright":
