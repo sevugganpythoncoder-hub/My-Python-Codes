@@ -287,10 +287,10 @@ while True:
         print("--- CMD PROJECT CREDITS ---")
         print("Language       : Python 3.12")
         print("Build/Start Date     : Feb 2026")
-        print("Status         : Incomplete Basic Edition")
+        print("Status         : V.1.5 Build Stable")
         print("---------------------------")
         print("""Special thanks to the PSF for the core engine
-                 Also to my friends and People for helping me with this endeavour and I hope to finish this project soon.
+         Also to my friends and People for helping me with this endeavour and I hope to finish this project soon.
         """)
         datas.append("Viewed Credits")
         save_settings(datas)
