@@ -2,7 +2,7 @@
 import requests
 
 city = "chennai"
-url = "https://api.github.com/users/{Yous/other Github Acc name}"
+url = "https://api.github.com/users/{Yours/other Github Acc name}"
 print(f"Fetching Data from {city} using url...")
 response = requests.get(url)
 if response.status_code == 200:
