@@ -1,5 +1,6 @@
 import random
 import json
+
 # MAIN CODE
 # Settings
 try:
@@ -21,6 +22,9 @@ def play_innings(batting_team, team_name, target=None):
     total_runs, wickets, legal_balls_bowled = 0, 0, 0
     total_balls_to_bowl = total_overs * 6
     
+    current_bowler = "" 
+    last_bowled_over = 0 
+    
     while legal_balls_bowled < total_balls_to_bowl:
         if wickets >= max_wickets:
             print("--- ALL OUT! ---")
@@ -29,20 +33,22 @@ def play_innings(batting_team, team_name, target=None):
         current_over = (legal_balls_bowled // 6) + 1
         ball_in_over = (legal_balls_bowled % 6) + 1
         
-        print(f"\nOver {current_over}.{ball_in_over} | Striker: {batting_team[striker_idx]['Name']}")
+        if ball_in_over == 1 and last_bowled_over < current_over:
+            current_bowler = input(f"\nWho is bowling Over {current_over}?: ")
+            last_bowled_over = current_over
+        
+        print(f"\n{current_over}.{ball_in_over} | Bowler: {current_bowler} to {batting_team[striker_idx]['Name']}")
         action = input("Enter Runs (0-6), 'W', 'WD', or 'NB': ").upper()
         
-        # 1. Handle WIDE
+        # --- ACTIONS SECTION ---
         if action == 'WD':
             total_runs += 1
             print(f"WIDE! 1 run added. Re-bowl.")
-            continue
+            continue 
 
-        # 2. Handle NO BALL (Special Logic for Wicket)
-        if action == 'NB':
+        elif action == 'NB':
             total_runs += 1
             print(f"NO BALL! 1 run added. FREE HIT / LIFE!")
-            # Check what happens on the No Ball
             next_action = input("What happened on the NB? (Runs or 'W' for no out): ").upper()
             if next_action == 'W':
                 print("LUCKY! It was a No Ball, so you are NOT OUT!")
@@ -56,35 +62,38 @@ def play_innings(batting_team, team_name, target=None):
                 except: pass
             continue
 
-        # 3. Handle WICKET (Legal Ball)
-        if action == 'W':
+        elif action == 'W':
             wickets += 1
             legal_balls_bowled += 1
             batting_team[striker_idx]["Balls"] += 1
             if wickets < max_wickets:
-                print(f"OUT! New Batsman: {batting_team[next_player_idx]['Name']}")
+                print(f"OUT! {current_bowler} gets the wicket! New Batsman: {batting_team[next_player_idx]['Name']}")
                 striker_idx = next_player_idx
                 next_player_idx += 1
-            continue
-
-        # 4. Handle NORMAL RUNS
-        try:
-            runs = int(action)
-            total_runs += runs
-            batting_team[striker_idx]["Runs"] += runs
-            batting_team[striker_idx]["Balls"] += 1
-            legal_balls_bowled += 1
-            
-            if runs in [1, 3]:
-                striker_idx, non_striker_idx = non_striker_idx, striker_idx
             
             if legal_balls_bowled % 6 == 0 and legal_balls_bowled != total_balls_to_bowl:
                 striker_idx, non_striker_idx = non_striker_idx, striker_idx
+            continue
 
-            if target and total_runs >= target:
-                break
-        except ValueError:
-            print("Invalid input!")
+        else:
+            # Handle Normal Runs
+            try:
+                runs = int(action)
+                total_runs += runs
+                batting_team[striker_idx]["Runs"] += runs
+                batting_team[striker_idx]["Balls"] += 1
+                legal_balls_bowled += 1
+                
+                if runs in [1, 3]:
+                    striker_idx, non_striker_idx = non_striker_idx, striker_idx
+                
+                if legal_balls_bowled % 6 == 0 and legal_balls_bowled != total_balls_to_bowl:
+                    striker_idx, non_striker_idx = non_striker_idx, striker_idx
+
+                if target and total_runs >= target:
+                    break
+            except ValueError:
+                print("Invalid input!")
 
     return total_runs, wickets
 
@@ -96,8 +105,8 @@ def show_scorecard(team_name, players, total):
         print(f"{p['Name']:<15} {p['Runs']:<5} {p['Balls']:<5} {sr:<5.2f}")
 
 # --- EXECUTION ---
-t_a_name = input("Team A: ")
-t_b_name = input("Team B: ")
+t_a_name = input("Team A (Batting First): ")
+t_b_name = input("Team B (Bowling First): ")
 t_a_p = setup_team(t_a_name)
 t_b_p = setup_team(t_b_name)
 
@@ -110,7 +119,7 @@ show_scorecard(t_a_name, t_a_p, s1)
 show_scorecard(t_b_name, t_b_p, s2)
 print(f"\n***** {res.upper()} *****")
 
-# --- THE MISSING SAVE BLOCK ---
+# --- THE SAVE BLOCK ---
 match_data = {
     "match_info": {
         "teams": [t_a_name, t_b_name],
