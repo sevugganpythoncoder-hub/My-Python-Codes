@@ -2,26 +2,30 @@
 import sys
 import os
 import datetime
-import logging
+import logging#Install
 import time
 import random
-import subprocess
+import subprocess#install
 import shutil
 import platform
 import socket
 import json 
-import glob
+import glob#install
 import requests
+import psutil#install
 
 # Starting
-print("NOTE THERE WILL BE A LOT OF BUG SINCE THIS IS ONLY THE BETA.If you have any suggestions Please Don't hesitate to text me in  my Githubpage(sevugganPythoncoder) and This cmd will be updated until the NOTE is changed.")
+print("""NOTE : All bugs have been Fixed up to current version,if there are still anymore I will try my best to cover them and this CMD may or may not recieve Future Updates.
+     """)
+
+print("\nFor best of use make sure to install some of the libraries.")
 
 py = platform.python_version()
 date = datetime.datetime.now()
 print(fr"""
-Python CMD Copyright Access [V.1.4/v beta] [Future updates]
+Python CMD Copyright Access [V.1.5/v Stable] [Future updates?]
 64-bit Python {py} | {date}
-Type 'Copyright' or 'help' for more info
+Type 'Copyright' or 'help' or 'credits' for more info
 """)
 
 # Inputs
@@ -147,6 +151,8 @@ while True:
                 del [Filename/dir name] : Deletes File/dir path(if admin)
                 clear history : Clears Cache and CMD history
                 ip-search : Fetches live Public External IP Address.
+                weather : Checks Weather of desired city(bonus)
+                sys-health : Checks {battery,cpu and RAM} components.
                 """)
   # copyright
     elif inputs == "copyright":
@@ -228,9 +234,67 @@ while True:
             datas.append(f"Used ip-search by {name}")
             save_settings(datas)
             logging.info(f"{name} fetched external IP successfully.")
-        except requests.exceptions.RequestExceptions as e:
+        except requests.exceptions.RequestException as e:
             print(f"404 Error Failed To connect Successfully to server {e} ")
             logging.warning(fr"Exception Failed {e}")
+    elif inputs == "weather":
+        city = input("Check weather for which city?:")
+        API = "8b4e2dab8c147748870c641bb2e35446"
+        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API}&units=metric"
+        try:
+            print(f"Checking conditions for {city}...")
+            time.sleep(7)
+            response = requests.get(url)
+            data = response.json()
+            temp = data["main"]["temp"]
+            desc = data["weather"][0]["description"]
+            humidity = data["main"]["humidity"]
+            print(f"--- Final Summary ---")
+            print(f"Temp: {temp}°C | Conditions: {desc.title()}")
+            print(f"Humidity: {humidity}%")
+        
+            datas.append(f"Checked weather by {name}: Current Temp {temp}C")
+            save_settings(datas)
+        except Exception as e:
+            print(f"Error Could Not Access Server/Server down : {e}")
+            time.sleep(3)
+            logging.warning(f"Access to Server failed : {e}. At {date}")
+    elif inputs == "sys-health":
+        print("--- SYSTEM HEALTH DASHBOARD ---")
+        try:
+            cpu_usage = psutil.cpu_percent(interval=1)
+            print(f"CPU Load: {cpu_usage}%")
+            
+            memory = psutil.virtual_memory()
+            print(f"RAM Usage: {memory.percent}% ({memory.used // (1024**2)}MB / {memory.total // (1024**2)}MB)")
+            total, used, free = shutil.disk_usage("/")
+            print(f"Disk Space: {(used/total)*100:.1f}% used ({free // (1024**3)}GB Free)")
+            
+            battery = psutil.sensors_battery()
+            if battery:
+                #list comprehension
+                print(f"Battery: {battery.percent}% {'(Charging)' if battery.power_plugged else '(Discharging)'}")
+            logging.info(f"{name} performed a system health check.")
+            datas.append("Performed sys-health check")
+            save_settings(datas)
+            print("-------------------------------")
+            
+        except PermissionError as e:
+            logging.warning("User System Access denied.")
+            print("Error could not access User System")
+            
+    elif inputs == "credits":
+        print("--- CMD PROJECT CREDITS ---")
+        print("Language       : Python 3.12")
+        print("Build/Start Date     : Feb 2026")
+        print("Status         : Incomplete Basic Edition")
+        print("---------------------------")
+        print("""Special thanks to the PSF for the core engine
+                 Also to my friends and People for helping me with this endeavour and I hope to finish this project soon.
+        """)
+        datas.append("Viewed Credits")
+        save_settings(datas)
+        
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
         
