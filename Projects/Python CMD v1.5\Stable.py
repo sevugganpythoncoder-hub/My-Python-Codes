@@ -153,6 +153,8 @@ while True:
                 ip-search : Fetches live Public External IP Address.
                 weather : Checks Weather of desired city(bonus)
                 sys-health : Checks {battery,cpu and RAM} components.
+                processlist : Shows the first 25 Processes Running in User's PC.
+                pykill : Kills The given Process.
                 """)
   # copyright
     elif inputs == "copyright":
@@ -294,6 +296,49 @@ while True:
         """)
         datas.append("Viewed Credits")
         save_settings(datas)
+    elif inputs.startswith("pykill "):
+        proc_name = inputs[7:]
+        found = False
+        print(fr"Searching for processes Matching name {proc_name}...")
+        for proc in psutil.process_iter(["pid","name"]):
+
+            try:
+                if proc_name.lower() in proc.info["name"].lower():
+                    print(f"Terminating {proc.info['name']} (PID: {proc.info['pid']})...")
+                    proc.kill()
+                    found = True
+
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+
+        if found:
+            print("Process(es) terminated.")
+            logging.info(f"{name} killed process: {proc_name} at {date}")
+            datas.append(f"{name} Killed {proc_name} Successfully!")
+            save_settings(datas)
+
+        else:
+            print(f"No Process named {proc_name}/process Unkilllable")
+            logging.warning(f"{name} tried to kill {proc_name} at {date}")
+            
+    elif inputs == "processlist":
+        print(f"{'PID':<8} {'Status':<12} {'Name'}")
+        print("-" * 30)
+        for proc in psutil.process_iter(['pid', 'name', 'status']):
+            try:
+                # Print the first 25 processes
+                print(f"{proc.info['pid']:<8} {proc.info['status']:<12} {proc.info['name']}")
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                pass
+    elif inputs == "disk-list":
+        print(f"{'Device':<15} {'Mount':<10} {'Type':<10} {'Total (GB)':<10}")
+        print("-" * 50)
+        for part in psutil.disk_partitions():
+            try:
+                usage = psutil.disk_usage(part.mountpoint)
+                print(f"{part.device:<15} {part.mountpoint:<10} {part.fstype:<10} {usage.total // (1024**3):<10}")
+            except (PermissionError, OSError):
+                continue
         
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
