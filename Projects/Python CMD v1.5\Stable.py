@@ -155,6 +155,7 @@ while True:
                 sys-health : Checks {battery,cpu and RAM} components.
                 processlist : Shows the first 25 Processes Running in User's PC.
                 pykill : Kills The given Process.
+                disk-list : Shows Avaliable Disk Partitions In User's PC.
                 """)
   # copyright
     elif inputs == "copyright":
