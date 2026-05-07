@@ -25,7 +25,7 @@ This CMD will no longer recieve Updates.
 ------------------------------------------------------------------
      """)
 
-print("\nFor best of use make sure to install some of the libraries.("Ignore If not using a raw .py file")")
+print("\nFor best of use make sure to install some of the libraries.[Ignore If not using a raw .py file]")
 
 py = platform.python_version()
 date = datetime.datetime.now()
