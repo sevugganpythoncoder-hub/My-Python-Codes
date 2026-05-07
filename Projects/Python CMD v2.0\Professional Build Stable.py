@@ -25,12 +25,12 @@ This CMD will no longer recieve Updates.
 ------------------------------------------------------------------
      """)
 
-print("\nFor best of use make sure to install some of the libraries.")
+print("\nFor best of use make sure to install some of the libraries.("Ignore If not using a raw .py file")")
 
 py = platform.python_version()
 date = datetime.datetime.now()
 print(fr"""
-Python CMD Copyright Access [V.1.5/v Stable] [Future updates?]
+Python CMD Copyright Access [V.2.0/v Professional Stable] [Future updates?]
 64-bit Python {py} | {date}
 Type 'Copyright' or 'help' or 'credits' for more info
 """)
@@ -189,23 +189,26 @@ while True:
         """)
         print("-" * 60)
         input("Press ENTER to return to the terminal...")
+        
     elif inputs == "sysinfo":
         print(f"OS : {platform.system()} {platform.release()}")
         print(f"Current Version pf py : {py}")
         datas.append(f"{name} checked systeminfo")
         save_settings(datas)
+  
     elif inputs.startswith("where "):
-        pattern = inputs[6:].strip()
+        pattern = inputs[6:].strip().lower()
         found = False
         for root, dirs, files in os.walk(os.getcwd()):
-            # Use glob.glob to match the pattern in each specific folder
-            for match in glob.glob(os.path.join(root, pattern)):
-                print(os.path.abspath(match))
-                found = True
+            for item in files + dirs:
+                if pattern in item.lower(): # Case-insensitive check
+                    print(os.path.abspath(os.path.join(root, item)))
+                    found = True
         if not found:
             print(f"INFO: Could not find '{pattern}' in {os.getcwd()} or subfolders.")
         datas.append(fr" {name} Deep searched: {pattern}")
         save_settings(datas)
+        
     elif inputs.startswith("del "):
         filename = inputs[4:].strip()
         try:
@@ -228,6 +231,7 @@ while True:
         except Exception as exc:
              logging.info(f"{name} logged due to technical error ERROR NO: 0XCB39266")
              raise RuntimeError("Error : Exited system Due to Win error")
+             
     elif inputs == "clear history":
         print(f"Clearing {name}'s CMD history....")
         time.sleep(10)
