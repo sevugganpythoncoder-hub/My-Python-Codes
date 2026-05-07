@@ -15,7 +15,14 @@ import requests
 import psutil#install
 
 # Starting
-print("""NOTE : All bugs have been Fixed up to current version,if there are still anymore I will try my best to cover them and this CMD may or may not recieve Future Updates.
+print("""NOTE : ------------------------------------------------------------------
+PYTHON COMMAND INTERFACE (PCI) | v2.0 FINAL STABLE BUILD
+Status: Completed
+------------------------------------------------------------------
+NOTE: This tool is optimized for System Recovery and Management. 
+All core features (Process Kill, Disk List, Sys-Health) are active.
+This CMD will no longer recieve Updates.
+------------------------------------------------------------------
      """)
 
 print("\nFor best of use make sure to install some of the libraries.")
@@ -56,7 +63,8 @@ while True:
   # Exit
     if inputs == "exit":
         logging.info(f"{name} Exited the CMD at {date}")
-        print("Logged info")
+        print("Thank You for choosing Python CMD.")
+        print("Exiting...")
         time.sleep(3)
         sys.exit()
   # date and time        
@@ -290,10 +298,12 @@ while True:
         print("--- CMD PROJECT CREDITS ---")
         print("Language       : Python 3.12")
         print("Build/Start Date     : Feb 2026")
-        print("Status         : V.1.5 Build Stable")
+        print("End Date : May 2026")
+        print("Status         : V.2.0 Professional Build Stable(Completed)")
         print("---------------------------")
         print("""Special thanks to the PSF for the core engine
-         Also to my friends and People for helping me with this endeavour and I hope to finish this project soon.
+         Also to my friends and People for helping me with this endeavour and I Hope This project Helps Everybody
+         Thank You.
         """)
         datas.append("Viewed Credits")
         save_settings(datas)
