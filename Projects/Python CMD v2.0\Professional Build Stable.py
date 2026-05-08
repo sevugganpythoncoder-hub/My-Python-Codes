@@ -16,7 +16,7 @@ import psutil#install
 
 # Starting
 print("""NOTE : ------------------------------------------------------------------
-PYTHON COMMAND INTERFACE (PCI) | v2.0 FINAL STABLE BUILD
+PYTHON COMMAND INTERFACE (PCI) | v2.1 FINAL STABLE BUILD
 Status: Completed
 ------------------------------------------------------------------
 NOTE: This tool is optimized for System Recovery and Management. 
@@ -431,7 +431,7 @@ while True:
             print("ERROR: System Restore Call Not accepted/Failed")
             logging.warning(f"SYSTEM RESTORE FAILURE")
     elif inputs == "help['systemrestore']":
-        print("INFO : ['Systemrestore']")
+        print("INFO : Module ['Systemrestore']")
         print("USE : Creates a Carbon Copy of the folder the user is using to run pythoncmd. ")
         print(fr"For E.g: if the user runs the CMD in C:\users\[yourname]\[dirpath] it will create a copy of that folder")
         print(f"\n NOTE: This Command is for Educational/Emergency Purposes only. This command although Enforced with safety features Can drain your system Space Very quickly as well as Potentially Damage the system.")
