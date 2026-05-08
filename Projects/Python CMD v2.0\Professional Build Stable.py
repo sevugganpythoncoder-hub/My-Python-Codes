@@ -165,6 +165,7 @@ while True:
                 -pykill : Kills The given Process.
                 -disk-list : Shows Avaliable Disk Partitions In User's PC.
                 -start : Creates a new instance of PythonCMD.
+                -system restore : Creates a backup of the current folder used by python cmd.For more info type help['system restore']
                 """)
   # copyright
     elif inputs == "copyright":
@@ -378,7 +379,63 @@ while True:
         except Exception as e:
             print(f"ERROR: Could not start new instance: {e}")
             logging.warning(f"Python CMD Failed To open Instance : {e}")
+            
+    elif inputs.startswith("del "):
+        filename = inputs[4:].strip()
+        try:
+            def deletefile(target):
+                try:
+                    # 1. Check if it's a Directory (Folder) FIRST
+                    if os.path.isdir(target):
+                        shutil.rmtree(target)
+                        print(f"Path {target} has been removed from system OS")
+                        logging.info(f"{name} deleted folder {target}")
+                
+                   # 2. Check if it's a File SECOND
+                    elif os.path.isfile(target):
+                        os.remove(target)
+                        print(f"File {target} has been removed from the system OS")
+                        logging.info(f"{name} deleted file {target}")
+                
+                    else:
+                        print("ERROR : File/Path Not Found".center(50,"-"))
+            
+                except PermissionError:
+                    print(" ERROR : Access Denied (Run as Admin) ".center(50, "!"))
+
+                deletefile(filename) 
         
+        except Exception as exc:
+            logging.info(f"{name} logged due to technical error ERROR NO: 0XCB39266")
+            # Optional: change to print(exc) if you don't want the app to close on error
+            raise RuntimeError("Error : Exited system Due to Win error")
+    elif inputs.strip() == "system restore":
+        try:
+            # 1. Define what to back up (Current working directory)
+            source = os.getcwd()
+        
+            # 2. Create a unique folder name using the date and time
+            now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            backup_folder = f"Restore_Point_{now}"
+        
+            print(f"INFO: Initializing System Restore Point: {backup_folder}...")
+        
+            # 3. Copy everything. 
+            # ignore_patterns ensures we don't back up the backup folder itself!
+            shutil.copytree(source, backup_folder, ignore=shutil.ignore_patterns('Restore_Point_*', 'build', 'dist'))
+        
+            print(f"SUCCESS: Snapshot created at {backup_folder}".center(50, "="))
+            datas.append(fr" {name} Created System Restore Point: {now}")
+            save_settings(datas)
+        except (PermissionError,Exception as e):
+            print("ERROR: System Restore Call Not accepted/Failed")
+            logging.warning(f"SYSTEM RESTORE FAILURE")
+    elif inputs == "help['systemrestore']":
+        print("INFO : ['Systemrestore']")
+        print("USE : Creates a Carbon Copy of the folder the user is using to run pythoncmd. ")
+        print(fr"For E.g: if the user runs the CMD in C:\users\[yourname]\[dirpath] it will create a copy of that folder")
+        print(f"\n NOTE: This Command is for Educational/Emergency Purposes only. This command although Enforced with safety features Can drain your system Space Very quickly as well as Potentially Damage the system.")
+        print("Use the command When needed and Wisely.You have been Warned.")
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
         
