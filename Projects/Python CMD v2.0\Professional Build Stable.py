@@ -427,7 +427,7 @@ while True:
             print(f"SUCCESS: Snapshot created at {backup_folder}".center(50, "="))
             datas.append(fr" {name} Created System Restore Point: {now}")
             save_settings(datas)
-        except (Exception as e):
+        except Exception as e:
             print("ERROR: System Restore Call Not accepted/Failed")
             logging.warning(f"SYSTEM RESTORE FAILURE")
     elif inputs == "help['systemrestore']":
