@@ -30,7 +30,7 @@ print("\nFor best of use make sure to install some of the libraries.[Ignore If n
 py = platform.python_version()
 date = datetime.datetime.now()
 print(fr"""
-Python CMD Copyright Access [V.2.0/v Professional Stable] [Future updates?]
+Python CMD Copyright Access [V.2.1/v Professional Stable] [Future updates?]
 64-bit Python {py} | {date}
 Type 'Copyright' or 'help' or 'credits' for more info
 """)
@@ -156,14 +156,15 @@ while True:
                 -cmd history: View session data
                 -sysinfo : View OS and python version
                 -where [file] : Shows where the given file is located
-                del [Filename/dir name] : Deletes File/dir path(if admin)
-                clear history : Clears Cache and CMD history
-                ip-search : Fetches live Public External IP Address.
-                weather : Checks Weather of desired city(bonus)
-                sys-health : Checks {battery,cpu and RAM} components.
-                processlist : Shows the first 25 Processes Running in User's PC.
-                pykill : Kills The given Process.
-                disk-list : Shows Avaliable Disk Partitions In User's PC.
+                -del [Filename/dir name] : Deletes File/dir path(if admin)
+                -clear history : Clears Cache and CMD history
+                -ip-search : Fetches live Public External IP Address.
+                -weather : Checks Weather of desired city(bonus)
+                -sys-health : Checks {battery,cpu and RAM} components.
+                -processlist : Shows the first 25 Processes Running in User's PC.
+                -pykill : Kills The given Process.
+                -disk-list : Shows Avaliable Disk Partitions In User's PC.
+                -start : Creates a new instance of PythonCMD.
                 """)
   # copyright
     elif inputs == "copyright":
@@ -302,7 +303,7 @@ while True:
         print("--- CMD PROJECT CREDITS ---")
         print("Language       : Python 3.12")
         print("Build/Start Date     : Feb 2026")
-        print("End Date : May 2026")
+        print("End Date :            May 2026")
         print("Status         : V.2.0 Professional Build Stable(Completed)")
         print("---------------------------")
         print("""Special thanks to the PSF for the core engine
@@ -354,6 +355,29 @@ while True:
                 print(f"{part.device:<15} {part.mountpoint:<10} {part.fstype:<10} {usage.total // (1024**3):<10}")
             except (PermissionError, OSError):
                 continue
+
+    elif inputs.strip() == "start":
+        try:
+            current_file = os.path.abspath(sys.argv[0])
+        
+            if current_file.endswith(".exe"):
+                # Exe files usually have their own loop, so this should stay open
+                subprocess.Popen([current_file], creationflags=subprocess.CREATE_NEW_CONSOLE)
+                logging.info(f"Created instance  by {name} using .exe")
+            else:
+                # For .py files, we wrap it in a 'cmd /k' call
+                # '/k' tells the console to "run this command and STAY OPEN"
+                subprocess.Popen(
+                f'cmd /k "{sys.executable} {current_file}"', 
+                creationflags=subprocess.CREATE_NEW_CONSOLE
+                ) 
+                logging.info(f"Created instance  by {name} using .py")
+            
+            print("INFO: Launching new PythonCMD instance...")
+            datas.append(fr" {name} Opened a new instance")
+        except Exception as e:
+            print(f"ERROR: Could not start new instance: {e}")
+            logging.warning(f"Python CMD Failed To open Instance : {e}")
         
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
