@@ -208,7 +208,7 @@ while True:
                 
                 -alias [path] as [name] : Creates a shortcut to the path for more info type help['alias']
                 
-                -view alias : Shows all shortcuts imposed to dir's by you.
+                -view aliases : Shows all shortcuts imposed to dir's by you.
                 """)
   # copyright
     elif inputs == "copyright":
@@ -501,17 +501,21 @@ while True:
         print("DATA: Aliases are stored in 'aliases.json' for persistent use.")
         print("---------------------------------")
         
-    elif inputs == "view alias":
+    elif inputs == "view aliases":
         if not alias:
             print("INFO: No aliases found in aliases.json")
         else:
-            print("\n--- CURRENT SYSTEM ALIASES ---")
-            print(f"{'NAME':<10} | {'PATH'}")
-            print("-" * 30)
-            for name, path in aliases.items():
-                print(f"{name:<10} | {path}")
-            print("-------------------------------\n")
-        
+            try:
+                print("\n--- CURRENT SYSTEM ALIASES ---")
+                print(f"{'NAME':<10} | {'PATH'}")
+                print("-" * 30)
+                for name, path in alias.items():
+                    print(f"{name:<10} | {path}")
+                    print("-------------------------------\n")
+                    logging.info(f"{name} checked Sys.alias")
+            except Exception as e:
+                print(f"Error: Unable To Access alias.json : {e}")
+                logging.warning("Sys.alias failed")
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
         
