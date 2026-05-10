@@ -16,12 +16,12 @@ import psutil#install
 
 # Starting
 print("""NOTE : ------------------------------------------------------------------
-PYTHON COMMAND INTERFACE (PCI) | v2.1 FINAL STABLE BUILD
+PYTHON COMMAND INTERFACE (PCI) | v2.3 FINAL STABLE BUILD
 Status: Completed
 ------------------------------------------------------------------
 NOTE: This tool is optimized for System Recovery and Management. 
 All core features (Process Kill, Disk List, Sys-Health) are active.
-This CMD will no longer recieve Updates.
+This CMD will no longer recieve Updates(This is False).
 ------------------------------------------------------------------
      """)
 
@@ -30,7 +30,7 @@ print("\nFor best of use make sure to install some of the libraries.[Ignore If n
 py = platform.python_version()
 date = datetime.datetime.now()
 print(fr"""
-Python CMD Copyright Access [V.2.1/v Professional Stable] [Future updates?]
+Python CMD Copyright Access [V.2.3/v Professional Stable] [Future updates?]
 64-bit Python {py} | {date}
 Type 'Copyright' or 'help' or 'credits' for more info
 """)
@@ -57,6 +57,20 @@ logging.basicConfig(filename='ghost_mode.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 datas = load_settings()
 
+# For alias Function
+def load_alias():
+    try:
+        with open("alias.json","r") as f:
+            return json.load(f)
+    except (FileNotFoundError,json.JSONDecodeError):
+        return {}
+
+def save_alias(alias):
+    with open("alias.json","w") as f:
+        json.dump(alias,f,indent=4)
+        
+alias = load_alias()
+        
 while True:
     date = datetime.datetime.now()
     inputs = input(f"{os.getcwd()}>").lower().strip()
@@ -100,6 +114,11 @@ while True:
             print("Exited Safely Due to error")
             print(os.getcwd())
         else:
+            if path in alias:
+                    path = alias[path]
+                    print(f"Redirecting via alias to: {path}")
+                    logging.info(f"{name} used alias : {path}")
+            
             try:
                 os.chdir(path)
                 logging.info(f"{name} checked {path} at {date}")
@@ -107,11 +126,12 @@ while True:
                 datas.append(f"Changed to {path}")
                 save_settings(datas)
             except FileNotFoundError:
-                 print("Such file is not found in Directory")
-                 logging.warning("File not found!!!")
+                print("Such file is not found in Directory")
+                logging.warning("File not found!!!")
+                
             except Exception as e:
-                 print(f"Error : {e}")
-                 logging.warning("File Exception Error!!")
+                    print(f"Error : {e}")
+                    logging.warning("File Exception Error!!")
  # file [Source,destination]      
     elif inputs == "file":
         action = input("Type 'cp' to copy or 'mv' to move: ").strip().lower()
@@ -147,25 +167,48 @@ while True:
         print("\nPrinting All avaliable current commands....")
         time.sleep(3)
         print(""" -Exit: Exits the Cmd
+        
                 -Date and Time: Shows date and time
+                
                 -Random : Picks a random option
+                
                 -run [Command] : Execute system tasks
+                
                 -cd [Path] : Change directory
+                
                 -file : Copies/moves Directories
+                
                 -systemdata: View IP/Hostname
+                
                 -cmd history: View session data
+                
                 -sysinfo : View OS and python version
+                
                 -where [file] : Shows where the given file is located
+                
                 -del [Filename/dir name] : Deletes File/dir path(if admin)
+                
                 -clear history : Clears Cache and CMD history
+                
                 -ip-search : Fetches live Public External IP Address.
+                
                 -weather : Checks Weather of desired city(bonus)
+                
                 -sys-health : Checks {battery,cpu and RAM} components.
+                
                 -processlist : Shows the first 25 Processes Running in User's PC.
+                
                 -pykill : Kills The given Process.
+                
                 -disk-list : Shows Avaliable Disk Partitions In User's PC.
+                
                 -start : Creates a new instance of PythonCMD.
+                
                 -system restore : Creates a backup of the current folder used by python cmd.For more info type help['system restore']
+                
+                -alias [path] as [name] : Creates a shortcut to the path for more info type help['alias']
+                
+                -view alias : Shows all shortcuts imposed to dir's by you.
                 """)
   # copyright
     elif inputs == "copyright":
@@ -305,7 +348,7 @@ while True:
         print("Language       : Python 3.12")
         print("Build/Start Date     : Feb 2026")
         print("End Date :            May 2026")
-        print("Status         : V.2.0 Professional Build Stable(Completed)")
+        print("Status         : V.2.3 Professional Build Stable(Completed?)")
         print("---------------------------")
         print("""Special thanks to the PSF for the core engine
          Also to my friends and People for helping me with this endeavour and I Hope This project Helps Everybody
@@ -313,6 +356,7 @@ while True:
         """)
         datas.append("Viewed Credits")
         save_settings(datas)
+        
     elif inputs.startswith("pykill "):
         proc_name = inputs[7:]
         found = False
@@ -436,6 +480,38 @@ while True:
         print(fr"For E.g: if the user runs the CMD in C:\users\[yourname]\[dirpath] it will create a copy of that folder")
         print(f"\n NOTE: This Command is for Educational/Emergency Purposes only. This command although Enforced with safety features Can drain your system Space Very quickly as well as Potentially Damage the system.")
         print("Use the command When needed and Wisely.You have been Warned.")
+        
+    elif inputs.startswith("alias"):
+        try:
+            parts = inputs.split(" ")
+            path = parts[1]
+            name = parts[3]
+            alias[name] = path
+            save_alias(alias)
+            print(f"Successfully mapped {name} -> {path}")
+            logging.info(f"{name} made an alias : {name} AKA {path}")
+        except IndexError:
+            print("Error: Use format 'alias [path] as [name]'")
+            
+    elif inputs == "help['alias']":
+        print("\nINFO: MODULE ['alias']")
+        print("PURGE: Creates a persistent shortcut for long directory paths.")
+        print(fr"USAGE: alias C:\Users\Name\Downloads as DL")
+        print("RESULT: Typing 'cd DL' will now move you to that folder instantly.")
+        print("DATA: Aliases are stored in 'aliases.json' for persistent use.")
+        print("---------------------------------")
+        
+    elif inputs == "view alias":
+        if not alias:
+            print("INFO: No aliases found in aliases.json")
+        else:
+            print("\n--- CURRENT SYSTEM ALIASES ---")
+            print(f"{'NAME':<10} | {'PATH'}")
+            print("-" * 30)
+            for name, path in aliases.items():
+                print(f"{name:<10} | {path}")
+            print("-------------------------------\n")
+        
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
         
