@@ -10,10 +10,10 @@ I have released A new project called PythonCMD it's my biggest and best on-going
 
 *Side note :If this project becomes a useful product i will continue to update it.**
 
-**NOTE: Must have Python 3.14.x + to use it**
+**NOTE: Must have Python 3.14.x + to use it**\
 
-**HOW TO USE**:
-**-->** Install PythonCMD from the release section in the right side of the github page
-**-->** Extract the Pythoncmd.zip from the zip
-**-->**  and Done! and run the pythoncmd.exe
+**HOW TO USE**:\
+**-->** Install PythonCMD from the release section in the right side of the github page\
+**-->** Extract the Pythoncmd.zip from the zip\
+**-->**  and Done! and run the pythoncmd.exe\
 ---
