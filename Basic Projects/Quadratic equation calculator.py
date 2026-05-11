@@ -1,8 +1,8 @@
 # inputs and libraries used
 import math
-a = int(input("Enter value of a:"))
-b = int(input("Enter value of b:"))
-c = int(input("Enter value of c:"))
+a = float(input("Enter value of a:"))
+b = float(input("Enter value of b:"))
+c = float(input("Enter value of c:"))
 print("\nForming calculations...")
 # calculations
 try:
@@ -16,11 +16,11 @@ except ZeroDivisionError:
 D = (b**2 - 4*a*c)
 if D > 0:
     print("You got 2 distinct real roots")
-    print(f"Root 1 of Eq : {Formula1}")
-    print(f"Root 2 of Eq: {Formula2}")
+    print(f"Root 1 of Eq : {Formula1:.2f}")
+    print(f"Root 2 of Eq: {Formula2:.2f}")
 elif D == 0:
     print("You got one real root")
-    print(f"Root 1 of Eq : {Formula1}")
-    print(f"Root 2 of Eq: {Formula2}")
+    print(f"Root 1 of Eq : {Formula1:.2f}")
+    print(f"Root 2 of Eq: {Formula2:.2f}")
 else:
     pass
