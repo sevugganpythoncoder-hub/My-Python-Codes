@@ -13,6 +13,8 @@ import json
 import glob#install
 import requests
 import psutil#install
+import string
+import math
 
 # Starting
 print("""NOTE : ------------------------------------------------------------------
@@ -518,57 +520,78 @@ while True:
             except Exception as e:
                 print(f"Error: Unable To Access alias.json : {e}")
                 logging.warning("Sys.alias failed")
+                
     elif inputs == "pci-scan":
+        def calculate_entropy(f_path):
+            try:
+                with open(f_path, "rb") as f:
+                    data = f.read()
+                if not data: return 0
+                entropy = 0
+                for x in range(256):
+                    p_x = data.count(x) / len(data)
+                    if p_x > 0:
+                        entropy += - p_x * math.log(p_x, 2)
+                return entropy
+            except: return 0
+
         print("\n--- PCI ANTIVIRUS MODES ---")
         print("[1] Quick Scan (User Folders Only)")
-        print("[2] Deep Scan  (Full System - Includes Windows/Program Files)")
+        print("[2] Deep Scan  (Full System)")
         mode = input("Select Mode (1/2): ").strip()
 
-        if mode not in ['1', '2']:
-            print("ERROR: Invalid Mode. Aborting Scan.")
-            continue
-
-        # Determine Scan Targets
-        if mode == 1:
+        # Targets: If mode is 2, scan all drives. Else, current dir.
+        if mode == '2':
             targets = [f"{d}:\\" for d in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" if os.path.exists(f"{d}:\\")]
+            logging.info(f"{name} launched PCI-scan Mode : Deep scan")
         else:
-            path = inputs[9:].strip()
-            targets = [path] if path else [os.getcwd()]
+            targets = [os.getcwd()]
+            logging.info(f"{name} launched PCI-scan Mode : Quick scan")
 
-        threat_exts = ['.vbs', '.bat', '.scr', '.exe', '.cmd', '.js','.dll'] 
+        threat_exts = ['.vbs', '.bat', '.scr', '.exe', '.cmd', '.js', '.dll'] 
         found_threats = []
 
         for target_dir in targets:
             print(f"\nScanning: {target_dir}...")
             for root, dirs, files in os.walk(target_dir):
-                # QUICK SCAN logic: Skip the heavy system directories
-                if mode == '1':
-                    if any(sys_dir in root for sys_dir in ["Windows", "Program Files", "AppData", "System Volume Information"]):
+                if mode == '1': # Skip system bloat in Quick Scan
+                    if any(sys_dir in root for sys_dir in ["Windows", "Program Files", "AppData"]):
                         continue 
+                #a whitelist of common safe keywords
+                whitelist = ['mcafee', 'windows', 'microsoft', 'nvidia', 'intel', 'chrome','AMD']
                 
                 for file in files:
-                    if any(file.lower().endswith(ext) for ext in threat_exts):
-                        full_path = os.path.join(root, file)
-                        found_threats.append(full_path)
-                        print(f"[!] THREAT: {file}")
+                    full_path = os.path.join(root, file)
+                    f_lower = file.lower()
+                    if any(f_lower.endswith(ext) for ext in threat_exts):
+                        if any(word in full_path.lower() for word in whitelist):
+                            continue
 
-        # Final Action
-        if found_threats:
-            print(f"\nSCAN COMPLETE: {len(found_threats)} potential threats found.")
-            logging.warning(f"PCI found {len(found_threats)}")
-            action = input("Type 'shred' to delete all, or 'exit' to keep them: ").lower()
-            if action == 'shred':
-                for t in found_threats:
-                    try:
-                        os.remove(t)
-                        print(f"SHREDDED: {os.path.basename(t)}")
-                        logging.info(fr"{name} Successfully deleted {os.path.basename(t)}")
-                    except:
-                        print(f"FAILED: {os.path.basename(t)} (Access Denied)")
-                        logging.warning("Failed to delete File")
-        else:
-            print("\nSYSTEM SECURE: No suspicious files found.")
-            logging.info(f"No threats found  at {date}")
+                # 2. Check Entropy
+                e_val = calculate_entropy(full_path)
+                
+                # 3. Only flag if it's high entropy AND not whitelisted
+                if e_val > 7.6:
+                    if os.path.getsize(full_path) < 10000000:
+                        found_threats.append(full_path)
+                        print(f"[!] THREAT DETECTED: {file} (Entropy: {e_val:.2f})")
+
+                # Result Action
+                if found_threats:
+                    print(f"\nSCAN COMPLETE: {len(found_threats)} threats found.")
+                    action = input("Type 'shred' to delete all: ").lower()
+                if action == 'shred':
+                    for t in found_threats:
+                        try:
+                            os.remove(t)
+                            print(f"SHREDDED: {os.path.basename(t)}")
+                            logging.info(f"Virus in {name}'s PC has been successfully deleted")
+                        except:
+                            print(f"FAILED: {os.path.basename(t)} (Access Denied)")
+                            logging.warning(f"Failed to delete File : {os.path.basename(t)} for unknown reason")
+                else:
+                    print("\nSYSTEM SECURE.")
+        
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
         
