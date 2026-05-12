@@ -15,10 +15,11 @@ import requests
 import psutil#install
 import string
 import math
+import hashlib
 
 # Starting
 print("""NOTE : ------------------------------------------------------------------
-PYTHON COMMAND INTERFACE (PCI) | v2.3 FINAL STABLE BUILD
+PYTHON COMMAND INTERFACE (PCI) | v2.5 FINAL STABLE BUILD
 Status: Completed
 ------------------------------------------------------------------
 NOTE: This tool is optimized for System Recovery and Management. 
@@ -32,7 +33,7 @@ print("\nFor best of use make sure to install some of the libraries.[Ignore If n
 py = platform.python_version()
 date = datetime.datetime.now()
 print(fr"""
-Python CMD Copyright Access [V.2.3/v Professional Stable] [Future updates?]
+Python CMD Copyright Access [V.2.5/v Professional Stable] [Future updates?]
 64-bit Python {py} | {date}
 Type 'Copyright' or 'help' or 'credits' for more info
 """)
@@ -212,7 +213,8 @@ while True:
                 
                 -view aliases : Shows all shortcuts imposed to dir's by you.
                 
-                -pci-scan : Scans One or all the files That exist in the User's computer for malware/viruses.
+                -pci-scan : Scans One or all the files That exist in the User's computer for malware/virusesFor more info type help['pci-scan'].
+                -pci-verify [file] : Unsure if the malicious files from pci scan are from system? Run pci-verify to Double check for more info type help['pci-verify']
                 """)
   # copyright
     elif inputs == "copyright":
@@ -352,7 +354,7 @@ while True:
         print("Language       : Python 3.12")
         print("Build/Start Date     : Feb 2026")
         print("End Date :            May 2026")
-        print("Status         : V.2.3 Professional Build Stable(Completed?)")
+        print("Status         : V.2.5 Professional Build Stable(Completed?)")
         print("---------------------------")
         print("""Special thanks to the PSF for the core engine
          Also to my friends and People for helping me with this endeavour and I Hope This project Helps Everybody
@@ -591,6 +593,64 @@ while True:
                             logging.warning(f"Failed to delete File : {os.path.basename(t)} for unknown reason")
                 else:
                     print("\nSYSTEM SECURE.")
+    elif inputs == "help['pci-scan']":
+
+        print("\nINFO ON MODULE : 'pci-scan' ")
+
+        print("USAGE : Checks The user's PC for any Malware,spyware and viruses.")
+
+        print("Types : 2")
+
+        print("For E.g: If the user's PC is hacked/invaded by a virus You can use pci-scan to scan for viruses and kill/delete the process/file")
+
+        print("Works like a common Antivirus")
+        
+        print("\n----MORE INFO ON TYPES----")
+
+        print("""It has 2 types[Quick/deep scan]\
+
+               Quick scan: Scans the folder the user is using\ to run Python CMD   E.g: if User is using C:\users it checks the C:\Users folder only.
+
+               
+
+               Deep Scan: Scans the ENTIRE PC Warning [May take a Loong time].
+
+                            """)
+
+        print("NOTE: This Anti-virus scanner is only 85-90%\ accurate due to technical difficulties[Idk how to\ make it 100%] Such as targetting Existant Anti\-virus software files as they are encrypted and have a high Entropy Number.So use this In case of emergencies and Use wisely[AGAIN DO NOT TRUST 100% This could [if you have admin privilges] destroy your PC beyond repair].")
+    
+    elif inputs.startswith("pci-verify "):
+        file_path = inputs[11:].strip()
+        
+        if os.path.exists(file_path):
+            sha256_hash = hashlib.sha256()
+            try:
+                with open(file_path, "rb") as f:
+                    # Read in chunks so it doesn't crash on huge files
+                    for byte_block in iter(lambda: f.read(4096), b""):
+                        sha256_hash.update(byte_block)
+                
+                print(f"\n--- FILE VERIFICATION ---")
+                print(f"File: {os.path.basename(file_path)}")
+                print(f"SHA-256: {sha256_hash.hexdigest()}")
+                print(f"Status: Fingerprint generated successfully.")
+            except Exception as e:
+                print(f"ERROR: Could not read file. {e}")
+        else:
+            print("ERROR: File not found.")
+    
+    elif inputs == "help['pci-verify']":
+        print("\nINFO ON MODULE : 'pci-verify' ")
+        print("USAGE : Generates a unique SHA-256 digital fingerprint for a file.")
+        print("FORMAT: pci-verify [file_path]")
+        print("Example: pci-verify C:\\Users\\Desktop\\suspicious.exe")
+    
+        print("\n----WHY USE THIS?----")
+        print("1. Integrity: Check if a system file has been modified by a virus.")
+        print("2. Identification: Copy the generated hash and search it online (e.g., VirusTotal).")
+        print("3. Security: Confirms if a file is exactly what it claims to be.")
+    
+        print("\nNOTE: This does NOT delete files. It only provides information.")
         
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
