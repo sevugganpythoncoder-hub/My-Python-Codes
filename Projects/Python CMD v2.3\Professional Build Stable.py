@@ -483,7 +483,7 @@ while True:
         
     elif inputs.startswith("alias"):
         try:
-            parts = inputs.split(" ")
+            parts = inputs.split(" as ")
             path = parts[1]
             name = parts[3]
             alias[name] = path
