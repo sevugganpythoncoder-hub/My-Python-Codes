@@ -617,7 +617,7 @@ while True:
 
                             """)
 
-        print("NOTE: This Anti-virus scanner is only 85-90%\ accurate due to technical difficulties[Idk how to\ make it 100%] Such as targetting Existant Anti\-virus software files as they are encrypted and have a high Entropy Number.So use this In case of emergencies and Use wisely[AGAIN DO NOT TRUST 100% This could [if you have admin privilges] destroy your PC beyond repair].")
+        print(fr"NOTE: This Anti-virus scanner is only 85-90%\ accurate due to technical difficulties[Idk how to\ make it 100%] Such as targetting Existant Anti\-virus software files as they are encrypted and have a high Entropy Number.So use this In case of emergencies and Use wisely[AGAIN DO NOT TRUST 100% This could [if you have admin privilges] destroy your PC beyond repair].")
     
     elif inputs.startswith("pci-verify "):
         file_path = inputs[11:].strip()
