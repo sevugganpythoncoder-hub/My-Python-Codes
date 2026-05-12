@@ -607,7 +607,7 @@ while True:
         
         print("\n----MORE INFO ON TYPES----")
 
-        print("""It has 2 types[Quick/deep scan]\
+        print(fr"""It has 2 types[Quick/deep scan]\
 
                Quick scan: Scans the folder the user is using\ to run Python CMD   E.g: if User is using C:\users it checks the C:\Users folder only.
 
