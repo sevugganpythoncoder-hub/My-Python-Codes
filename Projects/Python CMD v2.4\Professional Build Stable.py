@@ -16,6 +16,7 @@ import psutil#install
 import string
 import math
 import hashlib
+import ctypes
 
 # Starting
 print("""NOTE : ------------------------------------------------------------------
@@ -167,55 +168,70 @@ while True:
         save_settings(datas)
   # help
     elif inputs == "help":
-        print("\nPrinting All avaliable current commands....")
+        print("\nPrinting All available current commands....")
         time.sleep(3)
-        print(""" -Exit: Exits the Cmd
+        print("--------------------------------------------------------------------------------------------------")
+        print("ID    |  COMMAND                         -  DESCRIPTION")
+        print("--------------------------------------------------------------------------------------------------")
         
-                -Date and Time: Shows date and time
-                
-                -Random : Picks a random option
-                
-                -run [Command] : Execute system tasks
-                
-                -cd [Path] : Change directory
-                
-                -file : Copies/moves Directories
-                
-                -systemdata: View IP/Hostname
-                
-                -cmd history: View session data
-                
-                -sysinfo : View OS and python version
-                
-                -where [file] : Shows where the given file is located
-                
-                -del [Filename/dir name] : Deletes File/dir path(if admin)
-                
-                -clear history : Clears Cache and CMD history
-                
-                -ip-search : Fetches live Public External IP Address.
-                
-                -weather : Checks Weather of desired city(bonus)
-                
-                -sys-health : Checks {battery,cpu and RAM} components.
-                
-                -processlist : Shows the first 25 Processes Running in User's PC.
-                
-                -pykill : Kills The given Process.
-                
-                -disk-list : Shows Avaliable Disk Partitions In User's PC.
-                
-                -start : Creates a new instance of PythonCMD.
-                
-                -system restore : Creates a backup of the current folder used by python cmd.For more info type help['system restore']
-                
-                -alias [path] as [name] : Creates a shortcut to the path for more info type help['alias']
-                
-                -view aliases : Shows all shortcuts imposed to dir's by you.
-                
-                -pci-scan : Scans One or all the files That exist in the User's computer for malware/virusesFor more info type help['pci-scan'].
-                -pci-verify [file] : Unsure if the malicious files from pci scan are from system? Run pci-verify to Double check for more info type help['pci-verify']
-                """)
+        # --- CORE UTILITIES ---
+        print("1)    -  Exit                            -  Exits the Cmd")
+        
+        print("2)    -  Date and Time                   -  Shows current date and time")
+        
+        print("3)    -  Random                          -  Picks a random option from your list")
+        
+        print("4)    -  start                           -  Creates a new instance of PythonCMD")
+        
+        print("\n--- SYSTEM & FILE MANAGEMENT ---")
+        print("5)    -  run [Command]                   -  Execute system-level tasks")
+        
+        print("6)    -  cd [Path]                       -  Change current working directory")
+        
+        print("7)    -  file                            -  Copies or moves directories")
+        
+        print("8)    -  where [file]                    -  Shows the exact location of a specific file")
+        
+        print("9)    -  del [Filename]                  -  Deletes File/Dir (Requires Admin/WinRE)")
+        
+        print("\n--- DATA & NETWORKING ---")
+        print("10)   -  systemdata                      -  View network IP and Hostname")
+        
+        print("11)   -  cmd history                   -  View all session data and inputs")
+        
+        print("12)   -  sysinfo                       -  View OS details and Python version")
+        
+        print("13)   -  ip-search                     -  Fetches live Public External IP Address")
+        
+        print("14)   -  clear history                 -  Clears Cache and session CMD history")
+        
+        print("\n--- MONITORING & TOOLS ---")
+        print("15)   -  weather                       -  Checks Weather of desired city")
+        
+        print("16)   -  sys-health                    -  Monitors Battery, CPU, and RAM components")
+        
+        print("17)   -  processlist                   -  Shows the first 25 Processes running on PC")
+        
+        print("18)   -  pykill                        -  Kills a specified running process")
+        
+        print("19)   -  disk-list                     -  Shows available Disk Partitions")
+        
+        print("\n--- ADVANCED FEATURES ---")
+        print("20)   -  system restore                -  Creates a backup of the current folder")
+        print("                                         -  Note: For more info type help['system restore']")
+        
+        print("21)   -  alias [path] as [name]          -  Creates a custom shortcut to a path")
+        print("                                         -  Note: For more info type help['alias']")
+        
+        print("22)   -  view aliases                    -  Shows all shortcuts created by you")
+        
+        print("\n--- SECURITY (PCI SUITE) ---")
+        print("23)   -  pci-scan                        -  Scans files for malware/viruses")
+        print("                                         -  Note: For more info type help['pci-scan']")
+        
+        print("24)   -  pci-verify [file]               -  Verifies if malicious files are system-critical")
+        print("                                         -  Note: For more info type help['pci-verify']")
+        print("--------------------------------------------------------------------------------------------------")
   # copyright
     elif inputs == "copyright":
         print("-" * 60)
@@ -482,9 +498,13 @@ while True:
             logging.warning(f"SYSTEM RESTORE FAILURE")
     elif inputs == "help['systemrestore']":
         print("INFO : Module ['Systemrestore']")
+        
         print("USE : Creates a Carbon Copy of the folder the user is using to run pythoncmd. ")
+        
         print(fr"For E.g: if the user runs the CMD in C:\users\[yourname]\[dirpath] it will create a copy of that folder")
+        
         print(f"\n NOTE: This Command is for Educational/Emergency Purposes only. This command although Enforced with safety features Can drain your system Space Very quickly as well as Potentially Damage the system.")
+        
         print("Use the command When needed and Wisely.You have been Warned.")
         
     elif inputs.startswith("alias"):
@@ -525,7 +545,7 @@ while True:
                 
     elif inputs == "pci-scan":
         print("\n--- PCI ANTIVIRUS: SCANNING ---")
-        mode = input("[1] Quick | [2] Deep: ").strip()
+        mode = input("[1] Quick Scan / [2] Deep Scan: ").strip()
 
         if mode == '2':
             targets = [f"{d}:\\" for d in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" if os.path.exists(f"{d}:\\")]
@@ -598,7 +618,7 @@ while True:
 
         print(fr"""It has 2 types[Quick/deep scan]\
 
-               Quick scan: Scans the folder the user is using\ to run Python CMD   E.g: if User is using C:\users it checks the C:\Users folder only.
+               Quick scan: Scans the folder the user is using to run Python CMD   E.g: if User is using C:\users it checks the C:\Users folder only.
 
                
 
@@ -606,7 +626,7 @@ while True:
 
                             """)
 
-        print(fr"NOTE: This Anti-virus scanner is only 85-90%\ accurate due to technical difficulties[Idk how to\ make it 100%] Such as targetting Existant Anti\-virus software files as they are encrypted and have a high Entropy Number.So use this In case of emergencies and Use wisely[AGAIN DO NOT TRUST 100% This could [if you have admin privilges] destroy your PC beyond repair].")
+        print(fr"NOTE: This Anti-virus scanner is only 85-90% accurate due to technical difficulties[Idk how to make it 100%] Such as targetting Existant Anti\-virus software files as they are encrypted and have a high Entropy Number.So use this In case of emergencies and Use wisely[AGAIN DO NOT TRUST 100% This could [if you have admin privilges] destroy your PC beyond repair].")
     
     elif inputs.startswith("pci-verify "):
         file_path = inputs[11:].strip()
