@@ -524,92 +524,63 @@ while True:
                 logging.warning("Sys.alias failed")
                 
     elif inputs == "pci-scan":
-        start_time = time.time()
-        file_count = 0
-        total_files_estimate = 100000
-        def calculate_entropy(f_path):
-            try:
-                with open(f_path, "rb") as f:
-                    data = f.read()
-                if not data: return 0
-                entropy = 0
-                for x in range(256):
-                    p_x = data.count(x) / len(data)
-                    if p_x > 0:
-                        entropy += - p_x * math.log(p_x, 2)
-                return entropy
-            except: return 0
+        print("\n--- PCI ANTIVIRUS: SCANNING ---")
+        mode = input("[1] Quick | [2] Deep: ").strip()
 
-        print("\n--- PCI ANTIVIRUS MODES ---")
-        print("[1] Quick Scan (User Folders Only)")
-        print("[2] Deep Scan  (Full System)")
-        mode = input("Select Mode (1/2): ").strip()
-
-        # Targets: If mode is 2, scan all drives. Else, current dir.
         if mode == '2':
             targets = [f"{d}:\\" for d in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" if os.path.exists(f"{d}:\\")]
-            logging.info(f"{name} launched PCI-scan Mode : Deep scan")
         else:
             targets = [os.getcwd()]
-            logging.info(f"{name} launched PCI-scan Mode : Quick scan")
 
-        whitelist = ['.vbs', '.bat', '.scr', '.exe', '.cmd', '.js', '.dll','.dat','.db'] 
         found_threats = []
+        file_count = 0
+        total_files_estimate = 120000 if mode == '2' else 5000 
+        start_time = time.time()
 
-        for target_dir in targets:
-            print(f"\nScanning: {target_dir}...")
-            for root, dirs, files in os.walk(target_dir):
-                # (Quick Scan skip logic goes here)
+        try:
+            for target_dir in targets:
+                for root, dirs, files in os.walk(target_dir):
+                    if mode == '1' and target_dir not in root:
+                        if any(x in root for x in ["Windows", "Program Files", "AppData"]):
+                            continue
 
-                for file in files:
-                    file_count += 1
-                    full_path = os.path.join(root, file)
-                    f_lower = file.lower()
-
-                    # 1. THE GATEKEEPER: Focus only on executables/scripts
-                    # Remove .dat and .db from threat_exts to stop false positives
-                    if any(f_lower.endswith(ext) for ext in threat_exts):
-                        if not any(word in full_path.lower() for word in whitelist):
-                            e_val = calculate_entropy(full_path)
-                            
-                            if e_val > 7.6 and os.path.getsize(full_path) < 10000000:
-                                found_threats.append(full_path)
-                                # The "\r" + spaces clears the timer line before showing the threat
-                                sys.stdout.write("\r" + " " * 80 + "\r") 
-                                print(f"[!] THREAT DETECTED: {file} ({e_val:.2f})")
-
-                    # 2. THE LIVE TIMER: Move this out so it ticks for every file
-                    if file_count % 50 == 0:
-                        elapsed = time.time() - start_time
-                        files_per_sec = file_count / elapsed if elapsed > 0 else 1
-                        remaining = max(0, total_files_estimate - file_count)
-                        eta = remaining / files_per_sec
+                    for file in files:
+                        file_count += 1
                         
-                        # \r at the start keeps it on one line. 
-                        # The trailing spaces clear old digits.
-                        sys.stdout.write(f"\rElapsed: {elapsed:.1f}s | ETA: {eta:.1f}s | Files: {file_count}    ")
-                        sys.stdout.flush()
-            
+                        # 1. SCAN LOGIC
+                        if any(file.lower().endswith(ex) for ex in ['.exe', '.bat', '.js', '.py']):
+                            try:
+                                full_path = os.path.join(root, file)
+                                with open(full_path, "rb") as f:
+                                    data = f.read(10240)
+                                    if data:
+                                        p = [data.count(i)/len(data) for i in range(256)]
+                                        ent = -sum(x * math.log(x, 2) for x in p if x > 0)
+                                        if ent > 7.7:
+                                            found_threats.append(file)
+                                            # Print threat on a new line so it stays in history
+                                            print(f"\n[!] THREAT: {file}")
+                            except: pass
 
-                # Result Action
-        if found_threats:
-            print(f"\nSCAN COMPLETE: {len(found_threats)} threats found.")
-            action = input("Type 'shred' to delete all or 'exit' to Ignore ").lower()
-            if action == 'shred':
-                for t in found_threats:
-                    try:
-                        os.remove(t)
-                        print(f"SHREDDED: {os.path.basename(t)}")
-                        logging.info(f"Virus in {name}'s PC has been successfully deleted")
-                    except:
-                        print(f"FAILED: {os.path.basename(t)} (Access Denied)")
-                        logging.warning(f"Failed to delete File : {os.path.basename(t)} for unknown reason")
-            else:
-                print("\nExited pci-scan successfully.")
-                logging.info("Exited pci scan successfully.")
-        else:
-            print("\nSYSTEM SECURE : No Viruses Found.")
-            logging.info(f"No Viruses Dectected in User's PC as of {date}")
+                        # 2. THE SINGLE-LINE UI (STRICT FIX)
+                        if file_count % 100 == 0:
+                            elapsed = int(time.time() - start_time)
+                            min_e, sec_e = divmod(elapsed, 60)
+                            
+                            files_per_sec = file_count / (elapsed if elapsed > 0 else 1)
+                            eta_sec = int(max(0, total_files_estimate - file_count) / files_per_sec)
+                            min_a, sec_a = divmod(eta_sec, 60)
+                    
+                            # We use end='' and \r at the START to force overwriting
+                            status = f"\rSCAN: {target_dir[0]} | TIME: {min_e:02d}:{sec_e:02d} | ETA: {min_a:02d}:{sec_a:02d} | FILES: {file_count}"
+                            
+                            # ljust adds spaces to the end to "clear" any leftover long text
+                            print(status.ljust(80), end='', flush=True)
+
+        except KeyboardInterrupt:
+            print("\n\n[!] Aborted.")
+
+        print(f"\n\nSCAN COMPLETE | THREATS: {len(found_threats)} | TOTAL: {file_count}")
                 
     elif inputs == "help['pci-scan']":
 
