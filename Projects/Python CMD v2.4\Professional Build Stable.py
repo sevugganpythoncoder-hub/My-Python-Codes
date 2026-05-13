@@ -524,6 +524,9 @@ while True:
                 logging.warning("Sys.alias failed")
                 
     elif inputs == "pci-scan":
+        start_time = time.time()
+        file_count = 0
+        total_files_estimate = 100000
         def calculate_entropy(f_path):
             try:
                 with open(f_path, "rb") as f:
@@ -550,49 +553,64 @@ while True:
             targets = [os.getcwd()]
             logging.info(f"{name} launched PCI-scan Mode : Quick scan")
 
-        threat_exts = ['.vbs', '.bat', '.scr', '.exe', '.cmd', '.js', '.dll'] 
+        whitelist = ['.vbs', '.bat', '.scr', '.exe', '.cmd', '.js', '.dll','.dat','.db'] 
         found_threats = []
 
         for target_dir in targets:
             print(f"\nScanning: {target_dir}...")
             for root, dirs, files in os.walk(target_dir):
-                if mode == '1': # Skip system bloat in Quick Scan
-                    if any(sys_dir in root for sys_dir in ["Windows", "Program Files", "AppData"]):
-                        continue 
-                #a whitelist of common safe keywords
-                whitelist = ['mcafee', 'windows', 'microsoft', 'nvidia', 'intel', 'chrome','AMD']
-                
+                # (Quick Scan skip logic goes here)
+
                 for file in files:
+                    file_count += 1
                     full_path = os.path.join(root, file)
                     f_lower = file.lower()
-                    if any(f_lower.endswith(ext) for ext in threat_exts):
-                        if any(word in full_path.lower() for word in whitelist):
-                            continue
 
-                # 2. Check Entropy
-                e_val = calculate_entropy(full_path)
-                
-                # 3. Only flag if it's high entropy AND not whitelisted
-                if e_val > 7.6:
-                    if os.path.getsize(full_path) < 10000000:
-                        found_threats.append(full_path)
-                        print(f"[!] THREAT DETECTED: {file} (Entropy: {e_val:.2f})")
+                    # 1. THE GATEKEEPER: Focus only on executables/scripts
+                    # Remove .dat and .db from threat_exts to stop false positives
+                    if any(f_lower.endswith(ext) for ext in threat_exts):
+                        if not any(word in full_path.lower() for word in whitelist):
+                            e_val = calculate_entropy(full_path)
+                            
+                            if e_val > 7.6 and os.path.getsize(full_path) < 10000000:
+                                found_threats.append(full_path)
+                                # The "\r" + spaces clears the timer line before showing the threat
+                                sys.stdout.write("\r" + " " * 80 + "\r") 
+                                print(f"[!] THREAT DETECTED: {file} ({e_val:.2f})")
+
+                    # 2. THE LIVE TIMER: Move this out so it ticks for every file
+                    if file_count % 50 == 0:
+                        elapsed = time.time() - start_time
+                        files_per_sec = file_count / elapsed if elapsed > 0 else 1
+                        remaining = max(0, total_files_estimate - file_count)
+                        eta = remaining / files_per_sec
+                        
+                        # \r at the start keeps it on one line. 
+                        # The trailing spaces clear old digits.
+                        sys.stdout.write(f"\rElapsed: {elapsed:.1f}s | ETA: {eta:.1f}s | Files: {file_count}    ")
+                        sys.stdout.flush()
+            
 
                 # Result Action
-                if found_threats:
-                    print(f"\nSCAN COMPLETE: {len(found_threats)} threats found.")
-                    action = input("Type 'shred' to delete all: ").lower()
-                if action == 'shred':
-                    for t in found_threats:
-                        try:
-                            os.remove(t)
-                            print(f"SHREDDED: {os.path.basename(t)}")
-                            logging.info(f"Virus in {name}'s PC has been successfully deleted")
-                        except:
-                            print(f"FAILED: {os.path.basename(t)} (Access Denied)")
-                            logging.warning(f"Failed to delete File : {os.path.basename(t)} for unknown reason")
-                else:
-                    print("\nSYSTEM SECURE.")
+        if found_threats:
+            print(f"\nSCAN COMPLETE: {len(found_threats)} threats found.")
+            action = input("Type 'shred' to delete all or 'exit' to Ignore ").lower()
+            if action == 'shred':
+                for t in found_threats:
+                    try:
+                        os.remove(t)
+                        print(f"SHREDDED: {os.path.basename(t)}")
+                        logging.info(f"Virus in {name}'s PC has been successfully deleted")
+                    except:
+                        print(f"FAILED: {os.path.basename(t)} (Access Denied)")
+                        logging.warning(f"Failed to delete File : {os.path.basename(t)} for unknown reason")
+            else:
+                print("\nExited pci-scan successfully.")
+                logging.info("Exited pci scan successfully.")
+        else:
+            print("\nSYSTEM SECURE : No Viruses Found.")
+            logging.info(f"No Viruses Dectected in User's PC as of {date}")
+                
     elif inputs == "help['pci-scan']":
 
         print("\nINFO ON MODULE : 'pci-scan' ")
