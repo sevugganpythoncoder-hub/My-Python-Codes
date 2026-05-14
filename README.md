@@ -12,7 +12,7 @@ I have released A new project called PythonCMD it's my biggest and best on-going
 
 **NOTE: Must have Python 3.14.x + to use it**\(ignore if using a .exe file.)
 
-###**For more info go to** : https://docs.google.com/document/d/1EvvqXAkGTdYorkRTsxLye7Fr-CPinwyL8j4k2AM_JKc/edit?usp=sharing
+###**For more info go to** : https://docs.google.com/document/d/e/2PACX-1vTn3S7T3TaxQHyoeDxSsixil32-_OXUfMeckixfz2MJx7de11aefhFVVcoWV6OqbX_1WdNclcPbC78G/pub
 
 **HOW TO USE**:\
 **-->** Install pythonCMD from the release section in the right side of the github page\
