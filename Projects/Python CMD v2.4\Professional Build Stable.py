@@ -601,6 +601,21 @@ while True:
             print("\n\n[!] Aborted.")
 
         print(f"\n\nSCAN COMPLETE | THREATS: {len(found_threats)} | TOTAL: {file_count}")
+        
+        if found_threats:
+            choice = input(f"\n[?] Found {len(found_threats)} threats. Delete all? (y/n): ").lower().strip()
+            if choice == 'y':
+                print(f"Cleaning system...")
+                for threat_path in found_threats:
+                    try:
+                        if os.path.isfile(threat_path):
+                            os.remove(threat_path)
+                            print(f"[CLEANED] {threat_path}")
+                        elif os.path.isdir(threat_path):
+                            shutil.rmtree(threat_path)
+                            print(f"[REMOVED] {threat_path}")
+                    except Exception as e:
+                        print(f"[ERROR] Could not delete {threat_path}: {e}")
                 
     elif inputs == "help['pci-scan']":
 
