@@ -20,7 +20,7 @@ import ctypes
 
 # Starting
 print("""NOTE : ------------------------------------------------------------------
-PYTHON COMMAND INTERFACE (PCI) | v2.5 FINAL STABLE BUILD
+PYTHON COMMAND INTERFACE (PCI) | v3.0.0 FINAL STABLE BUILD
 Status: Completed
 ------------------------------------------------------------------
 NOTE: This tool is optimized for System Recovery and Management. 
@@ -34,7 +34,7 @@ print("\nFor best of use make sure to install some of the libraries.[Ignore If n
 py = platform.python_version()
 date = datetime.datetime.now()
 print(fr"""
-Python CMD Copyright Access [V.2.5/v Professional Stable] [Future updates?]
+Python CMD Copyright Access [V.3.0.0/v Advance Standalone Stable] [Future updates?]
 64-bit Python {py} | {date}
 Type 'Copyright' or 'help' or 'credits' for more info
 """)
@@ -355,7 +355,7 @@ while True:
         print("Language       : Python 3.12")
         print("Build/Start Date     : Feb 2026")
         print("End Date :            May 2026")
-        print("Status         : V.2.5 Professional Build Stable(Completed?)")
+        print("Status         : V.3.0.0 Advance Professional Build Stable(Completed?)")
         print("---------------------------")
         print("""Special thanks to the PSF for the core engine
          Also to my friends and People for helping me with this endeavour and I Hope This project Helps Everybody
@@ -706,22 +706,29 @@ while True:
             
         def diskpart_basic():
             print("\n--- PCI DISK MANAGEMENT (BASIC) ---")
-            print("Type 'exit' to return to main CMD or type 'help-bs'for more info.\n")
+            print("Type 'help-bs' for commands or 'exit' to return.\n")
             while True:
                 cmd = input("DISKPARTbs> ").lower().strip()
                 if cmd == "exit":
                     break
-                elif cmd == "list disk" or cmd == "list volume":
-                    print(f"\n{'Device':<15} {'Mount':<10} {'Type':<10} {'Total (GB)':<10}")
-                    print("-" * 50)
-                    for part in psutil.disk_partitions():
-                        try:
+            
+                elif cmd == "list disk":
+                    # Shows Physical Drives (Using psutil.disk_usage logic)
+                    print(f"\n{'Disk ###':<10} {'Status':<10} {'Size':<10} {'Free':<10}")
+                    print("-" * 45)
+                    # We treat the root of partitions as the 'disks' for basic mode
+                    for i, part in enumerate(psutil.disk_partitions()):
+                        if 'fixed' in part.opts:
                             usage = psutil.disk_usage(part.mountpoint)
-                            print(f"{part.device:<15} {part.mountpoint:<10} {part.fstype:<10} {usage.total // (1024**3):<10}")
-                        except: continue
-                    
-                elif cmd == "clean" or cmd == "format":
-                    print("ACCESS DENIED: Basic mode is Read-Only. Use 'diskpart-advance'.")
+                            print(f"Disk {i:<5} Online     {usage.total // (1024**3):<3} GB    {usage.free // (1024**3):<3} GB")
+
+                elif cmd == "list volume":
+                    # Shows Logical Volumes (Drive Letters and File Systems)
+                    print(f"\n{'Volume ###':<12} {'Ltr':<5} {'Label':<12} {'Fs':<6} {'Type'}")
+                    print("-" * 55)
+                    for i, part in enumerate(psutil.disk_partitions()):
+                        d_type = "Partition" if "fixed" in part.opts else "Removable"
+                        print(f"Volume {i:<5} {part.mountpoint:<5} {'SYS_OS':<12} {part.fstype:<6} {d_type}")
                 elif cmd == "help-bs":
                     help_diskpart_bs()
                 else:
@@ -745,34 +752,57 @@ while True:
             print("\nREQUIRED: Must run PCI as Administrator or access in WinRE.")
             print("!"*50 + "\n")
         def diskpart_advance():
+            # 1. Check for Admin immediately
             if not ctypes.windll.shell32.IsUserAnAdmin():
-                print("![ERROR]! : DISKPART-ADVANCE REQUIRES ADMIN PRIVILEGES.")
-                return
+                print("\n" + "!"*50)
+                print(" ERROR: ADMINISTRATIVE PRIVILEGES REQUIRED ".center(50, "!"))
+                print(" Please Restart PCI as Administrator to use Advance Mode. ".center(50, "!"))
+                print("!"*50 + "\n")
+                return # This fixes your 'exit' error by kicking the user out safely
 
-        print("\n--- PCI DISK MANAGEMENT (ADVANCED) ---")
-        print("WARNING: Commands here can delete data. Type 'exit' to return or 'help-ad' for more info.\n")
-        while True:
-            cmd = input("DISKPARTad> ").lower().strip()
-            if cmd == "exit":
-                break
-            elif cmd == "list disk":
-                subprocess.run("diskpart /s list_tmp.txt", shell=True) # Or just use the basic list logic
-            elif cmd.startswith("select ") or cmd in ["clean", "format"]:
-                confirm = input(f"CONFIRM EXECUTION OF '{cmd}'? (y/n): ").lower()
-                if confirm == 'y':
-                    # Creates a temporary script to pipe into the real windows diskpart
-                    with open("pci_script.txt", "w") as f: f.write(cmd)
+            print("\n" + "="*60)
+            print(" PCI DISKPART: ADVANCED SYSTEM MODIFICATION MODE ".center(60, " "))
+            print(" WARNING: DATA LOSS IS PERMANENT IN THIS SHELL ".center(60, "!"))
+            print("="*60)
+            print("Type 'help-ad' for syntax or 'exit' to return.\n")
+
+            while True:
+                cmd = input("DISKPARTad> ").lower().strip()
+                if cmd == "exit":
+                    # Clean up any leftover temp scripts before leaving
+                    if os.path.exists("pci_script.txt"):
+                        os.remove("pci_script.txt")
+                        break
+                    logging.info(f"{name} exited Diskpart at {date}")
+                elif cmd == "help-ad":
+                    help_diskpart_ad()
+
+                elif cmd == "list disk" or cmd == "list volume":
+                    # We use /s to run a one-line script so the window stays open long enough to read
+                    with open("pci_script.txt", "w") as f:
+                        f.write(cmd)
                     subprocess.run("diskpart /s pci_script.txt", shell=True)
-                    os.remove("pci_script.txt")
+            
+                elif cmd.startswith("select ") or cmd == "clean" or "format" in cmd:
+                    confirm = input(f"CRITICAL: Confirm '{cmd}'? (y/n): ").lower().strip()
+                    if confirm == 'y':
+                        with open("pci_script.txt", "w") as f:
+                            f.write(f"{cmd}\n")
+                        print(f"Executing {cmd}...")
+                        subprocess.run("diskpart /s pci_script.txt", shell=True)
+                        print("Command Sent to System Controller.")
+                    else:
+                        print("Operation Aborted.")
+                    
+                    logging.warning(f"{name} modified Diskpart")
+                
+                    # We use capture_output=False so you can see the real Diskpart success message
                 else:
-                    print("Operation Stopped")
-            elif cmd == "help-ad":
-                help_diskpart_ad()
-            else:
-                print(f"'{cmd}' not recognized or requires specific parameters.")
+                    print(f"'{cmd}' not recognized. Use 'list disk' or 'select disk X'.")
         diskpart_advance()
         datas.append(f"{name} accessed Diskpart-Advance")
         save_settings(datas)
+            
         
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
