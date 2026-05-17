@@ -175,62 +175,47 @@ while True:
         print("--------------------------------------------------------------------------------------------------")
         
         # --- CORE UTILITIES ---
-        print("1)    -  Exit                            -  Exits the Cmd")
-        
-        print("2)    -  Date and Time                   -  Shows current date and time")
-        
-        print("3)    -  Random                          -  Picks a random option from your list")
-        
-        print("4)    -  start                           -  Creates a new instance of PythonCMD")
+        print("1)    -  Exit                             -  Exits the Cmd")
+        print("2)    -  Date and Time                    -  Shows current date and time")
+        print("3)    -  Random                           -  Picks a random option from your list")
+        print("4)    -  start                            -  Creates a new instance of PythonCMD")
         
         print("\n--- SYSTEM & FILE MANAGEMENT ---")
-        print("5)    -  run [Command]                   -  Execute system-level tasks")
-        
-        print("6)    -  cd [Path]                       -  Change current working directory")
-        
-        print("7)    -  file                            -  Copies or moves directories")
-        
-        print("8)    -  where [file]                    -  Shows the exact location of a specific file")
-        
-        print("9)    -  del [Filename]                  -  Deletes File/Dir (Requires Admin/WinRE)")
+        print("5)    -  run [Command]                    -  Execute system-level tasks")
+        print("6)    -  cd [Path]                        -  Change current working directory")
+        print("7)    -  file                             -  Copies or moves directories")
+        print("8)    -  where [file]                     -  Shows the exact location of a specific file")
+        print("9)    -  del [Filename]                   -  Deletes File/Dir (Requires Admin/WinRE)")
+        print("10)   -  vol                              -  Shows Serial Number and Volume Info (Enhanced)")
         
         print("\n--- DATA & NETWORKING ---")
-        print("10)   -  systemdata                      -  View network IP and Hostname")
-        
-        print("11)   -  cmd history                   -  View all session data and inputs")
-        
-        print("12)   -  sysinfo                       -  View OS details and Python version")
-        
-        print("13)   -  ip-search                     -  Fetches live Public External IP Address")
-        
-        print("14)   -  clear history                 -  Clears Cache and session CMD history")
+        print("11)   -  systemdata                       -  View network IP and Hostname")
+        print("12)   -  cmd history                      -  View all session data and inputs")
+        print("13)   -  sysinfo                          -  View OS details and Python version")
+        print("14)   -  ip-search                        -  Fetches live Public External IP Address")
+        print("15)   -  clear history                    -  Clears Cache and session CMD history")
         
         print("\n--- MONITORING & TOOLS ---")
-        print("15)   -  weather                       -  Checks Weather of desired city")
-        
-        print("16)   -  sys-health                    -  Monitors Battery, CPU, and RAM components")
-        
-        print("17)   -  processlist                   -  Shows the first 25 Processes running on PC")
-        
-        print("18)   -  pykill                        -  Kills a specified running process")
-        
-        print("19)   -  disk-list                     -  Shows available Disk Partitions")
+        print("16)   -  weather                          -  Checks Weather of desired city")
+        print("17)   -  sys-health                       -  Monitors Battery, CPU, and RAM components")
+        print("18)   -  processlist                      -  Shows the first 25 Processes running on PC")
+        print("19)   -  pykill                           -  Kills a specified running process")
+        print("20)   -  disk-list                        -  Shows available Disk Partitions")
         
         print("\n--- ADVANCED FEATURES ---")
-        print("20)   -  system restore                -  Creates a backup of the current folder")
-        print("                                         -  Note: For more info type help['system restore']")
+        print("21)   -  system restore                   -  Creates a backup of the current folder")
+        print("                                          -  Note: For more info type help['system restore']")
+        print("22)   -  alias [path] as [name]           -  Creates a custom shortcut to a path")
+        print("                                          -  Note: For more info type help['alias']")
+        print("23)   -  view aliases                     -  Shows all shortcuts created by you")
         
-        print("21)   -  alias [path] as [name]          -  Creates a custom shortcut to a path")
-        print("                                         -  Note: For more info type help['alias']")
-        
-        print("22)   -  view aliases                    -  Shows all shortcuts created by you")
+        print("\n--- DISK MANAGEMENT (NEW) ---")
+        print("24)   -  diskpart-basic                   -  Safe, Read-Only disk monitoring")
+        print("25)   -  diskpart-advance                 -  Write-Access (Clean/Format) - ADMIN REQ.")
         
         print("\n--- SECURITY (PCI SUITE) ---")
-        print("23)   -  pci-scan                        -  Scans files for malware/viruses")
-        print("                                         -  Note: For more info type help['pci-scan']")
-        
-        print("24)   -  pci-verify [file]               -  Verifies if malicious files are system-critical")
-        print("                                         -  Note: For more info type help['pci-verify']")
+        print("26)   -  pci-scan                         -  Scans files for malware/viruses")
+        print("27)   -  pci-verify [file]                -  Verifies if malicious files are system-critical")
         print("--------------------------------------------------------------------------------------------------")
   # copyright
     elif inputs == "copyright":
@@ -705,6 +690,89 @@ while True:
 
 
         pci_vol("C:")
+    
+    elif inputs == "diskpart-basic":
+        def help_diskpart_bs():
+            print("\n" + "="*50)
+            print("GUIDE: DISKPART-BASIC (READ-ONLY)")
+            print("="*50)
+            print("This mode is for system reporting and health checks.")
+            print("\nCOMMANDS:")
+            print("1. list disk   - Shows all physical drives and their sizes.")
+            print("2. list volume - Displays partitions and current mount points.")
+            print("3. exit        - Returns to the main PCI terminal.")
+            print("\nNOTE: No modifications can be made in this mode.")
+            print("="*50 + "\n")
+            
+        def diskpart_basic():
+            print("\n--- PCI DISK MANAGEMENT (BASIC) ---")
+            print("Type 'exit' to return to main CMD or type 'help-bs'for more info.\n")
+            while True:
+                cmd = input("DISKPARTbs> ").lower().strip()
+                if cmd == "exit":
+                    break
+                elif cmd == "list disk" or cmd == "list volume":
+                    print(f"\n{'Device':<15} {'Mount':<10} {'Type':<10} {'Total (GB)':<10}")
+                    print("-" * 50)
+                    for part in psutil.disk_partitions():
+                        try:
+                            usage = psutil.disk_usage(part.mountpoint)
+                            print(f"{part.device:<15} {part.mountpoint:<10} {part.fstype:<10} {usage.total // (1024**3):<10}")
+                        except: continue
+                    
+                elif cmd == "clean" or cmd == "format":
+                    print("ACCESS DENIED: Basic mode is Read-Only. Use 'diskpart-advance'.")
+                elif cmd == "help-bs":
+                    help_diskpart_bs()
+                else:
+                    print(f"'{cmd}' is not recognized in Basic mode.")
+        diskpart_basic()
+        datas.append(f"{name} accessed Diskpart-Basic")
+        save_settings(datas)
+                    
+    elif inputs == "diskpart-advance":
+        def help_diskpart_ad():
+            print("\n" + "!"*50)
+            print("GUIDE: DISKPART-ADVANCE (SYSTEM MODIFICATION)")
+            print("!"*50)
+            print("WARNING: This mode interfaces with Windows Diskpart.exe.")
+            print("Incorrect usage can result in PERMANENT DATA LOSS.")
+            print("\nWORKFLOW:")
+            print("1. list disk          - Identify the Disk ID (e.g., Disk 1).")
+            print("2. select disk [ID]   - Focus the tool on a specific drive.")
+            print("3. clean              - ERASES all partitions on the selected disk.")
+            print("4. format fs=ntfs quick - Formats the disk to NTFS.")
+            print("\nREQUIRED: Must run PCI as Administrator or access in WinRE.")
+            print("!"*50 + "\n")
+        def diskpart_advance():
+            if not ctypes.windll.shell32.IsUserAnAdmin():
+                print("![ERROR]! : DISKPART-ADVANCE REQUIRES ADMIN PRIVILEGES.")
+                return
+
+        print("\n--- PCI DISK MANAGEMENT (ADVANCED) ---")
+        print("WARNING: Commands here can delete data. Type 'exit' to return or 'help-ad' for more info.\n")
+        while True:
+            cmd = input("DISKPARTad> ").lower().strip()
+            if cmd == "exit":
+                break
+            elif cmd == "list disk":
+                subprocess.run("diskpart /s list_tmp.txt", shell=True) # Or just use the basic list logic
+            elif cmd.startswith("select ") or cmd in ["clean", "format"]:
+                confirm = input(f"CONFIRM EXECUTION OF '{cmd}'? (y/n): ").lower()
+                if confirm == 'y':
+                    # Creates a temporary script to pipe into the real windows diskpart
+                    with open("pci_script.txt", "w") as f: f.write(cmd)
+                    subprocess.run("diskpart /s pci_script.txt", shell=True)
+                    os.remove("pci_script.txt")
+                else:
+                    print("Operation Stopped")
+            elif cmd == "help-ad":
+                help_diskpart_ad()
+            else:
+                print(f"'{cmd}' not recognized or requires specific parameters.")
+        diskpart_advance()
+        datas.append(f"{name} accessed Diskpart-Advance")
+        save_settings(datas)
         
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
