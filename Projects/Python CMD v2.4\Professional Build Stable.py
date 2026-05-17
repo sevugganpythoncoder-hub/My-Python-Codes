@@ -675,6 +675,36 @@ while True:
         print("3. Security: Confirms if a file is exactly what it claims to be.")
     
         print("\nNOTE: This does NOT delete files. It only provides information.")
+    
+    
+    elif inputs == "vol":
+        def pci_vol(drive_letter="C:"):
+            try:
+                # 1. Get the Serial Number using a background system call
+                # We filter the output of the Windows 'vol' command
+                raw_vol = subprocess.check_output(f"vol {drive_letter}", shell=True).decode()
+                serial = raw_vol.split("Number is")[-1].strip()
+
+                # 2. Get the Drive Type and Status using psutil
+                partitions = psutil.disk_partitions()
+                drive_data = next((p for p in partitions if p.mountpoint.startswith(drive_letter)), None)
+        
+                if drive_data:
+                    # Human-readable translation
+                    drive_type = "Local Disk" if "fixed" in drive_data.opts else "Removable Drive"
+                    access = "Read/Write" if "rw" in drive_data.opts else "Read-Only"
+            
+                    print(f"\n Volume in drive {drive_letter} is SYSTEM_OS")
+                    print(f" Volume Serial Number is {serial}")
+                    print(f" Status: {drive_type} | Access: {access}")
+                else:
+                    print(f"Error: Volume {drive_letter} not found.")
+            
+            except Exception as e:
+                print(f"PCI_VOL_ERR: {e}")
+
+
+        pci_vol("C:")
         
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
