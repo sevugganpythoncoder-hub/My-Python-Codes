@@ -365,13 +365,33 @@ while True:
         save_settings(datas)
         
     elif inputs.startswith("pykill "):
-        proc_name = inputs[7:]
+        proc_name = inputs[7:].strip()  # Added .strip() to clean up spaces
         found = False
+        
+        # 1. Define the critical system blacklist
+        blacklist = ["svchost.exe", "lsass.exe", "wininit.exe", "services.exe", "csrss.exe", "explorer.exe"]
+        
         print(fr"Searching for processes Matching name {proc_name}...")
-        for proc in psutil.process_iter(["pid","name"]):
-
+        for proc in psutil.process_iter(["pid", "name"]):
             try:
-                if proc_name.lower() in proc.info["name"].lower():
+                # Basic check to see if the process name exists safely
+                if proc.info["name"] and proc_name.lower() in proc.info["name"].lower():
+                    current_proc_name = proc.info["name"].lower()
+                    
+                    # 2. Check if the found process is in your blacklist
+                    if current_proc_name in blacklist:
+                        print("\n" + "!"*60)
+                        print(f" WARNING: {proc.info['name']} (PID: {proc.info['pid']}) is a CRITICAL SYSTEM PROCESS! ".center(60, "="))
+                        print(" Terminating this could cause a Blue/black Screen of Death (BSOD). ".center(60, "="))
+                        print("!"*60)
+                        
+                        # Ask for confirmation (Soft Block)
+                        confirm = input(f"Are you absolutely sure you want to kill {proc.info['name']}? (y/N): ").lower().strip()
+                        if confirm != 'y':
+                            print(f"Skipped: Termination of {proc.info['name']} aborted by user.\n")
+                            continue  # Skips this process and moves to the next one in the loop
+                    
+                    # 3. Execution Phase (Runs if not blacklisted OR if user typed 'y')
                     print(f"Terminating {proc.info['name']} (PID: {proc.info['pid']})...")
                     proc.kill()
                     found = True
@@ -384,9 +404,8 @@ while True:
             logging.info(f"{name} killed process: {proc_name} at {date}")
             datas.append(f"{name} Killed {proc_name} Successfully!")
             save_settings(datas)
-
         else:
-            print(f"No Process named {proc_name}/process Unkilllable")
+            print(f"No Process named {proc_name} or process is unkillable/banned by user.")
             logging.warning(f"{name} tried to kill {proc_name} at {date}")
             
     elif inputs == "processlist":
@@ -629,24 +648,29 @@ while True:
         print(fr"NOTE: This Anti-virus scanner is only 85-90% accurate due to technical difficulties[Idk how to make it 100%] Such as targetting Existant Anti\-virus software files as they are encrypted and have a high Entropy Number.So use this In case of emergencies and Use wisely[AGAIN DO NOT TRUST 100% This could [if you have admin privilges] destroy your PC beyond repair].")
     
     elif inputs.startswith("pci-verify "):
-        file_path = inputs[11:].strip()
+        # Use .strip() with arguments to clear any accidental drag-and-drop quotes
+        file_path = inputs[11:].strip().strip('"').strip("'")
         
         if os.path.exists(file_path):
-            sha256_hash = hashlib.sha256()
-            try:
-                with open(file_path, "rb") as f:
-                    # Read in chunks so it doesn't crash on huge files
-                    for byte_block in iter(lambda: f.read(4096), b""):
-                        sha256_hash.update(byte_block)
-                
-                print(f"\n--- FILE VERIFICATION ---")
-                print(f"File: {os.path.basename(file_path)}")
-                print(f"SHA-256: {sha256_hash.hexdigest()}")
-                print(f"Status: Fingerprint generated successfully.")
-            except Exception as e:
-                print(f"ERROR: Could not read file. {e}")
+            # NEW CHECK: Prevent directory crashes using os.path.isdir
+            if os.path.isdir(file_path):
+                print("ERROR: Target is a directory. 'pci-verify' only works on specific files.")
+            else:
+                sha256_hash = hashlib.sha256()
+                try:
+                    with open(file_path, "rb") as f:
+                        # Perfect chunk-reading logic maintained here
+                        for byte_block in iter(lambda: f.read(4096), b""):
+                            sha256_hash.update(byte_block)
+                    
+                    print(f"\n--- FILE VERIFICATION ---")
+                    print(f"File: {os.path.basename(file_path)}")
+                    print(f"SHA-256: {sha256_hash.hexdigest()}")
+                    print(f"Status: Fingerprint generated successfully.")
+                except Exception as e:
+                    print(f"ERROR: Could not read file. {e}")
         else:
-            print("ERROR: File not found.")
+            print("ERROR: File not found. Check the path spelling.")
     
     elif inputs == "help['pci-verify']":
         print("\nINFO ON MODULE : 'pci-verify' ")
