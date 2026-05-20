@@ -511,15 +511,24 @@ while True:
         
         print("Use the command When needed and Wisely.You have been Warned.")
         
-    elif inputs.startswith("alias"):
+    elif inputs.startswith("alias "):
         try:
-            parts = inputs.split(" as ")
-            path = parts[1]
-            name = parts[3]
-            alias[name] = path
-            save_alias(alias)
-            print(f"Successfully mapped {name} -> {path}")
-            logging.info(f"{name} made an alias : {name} AKA {path}")
+             # 1. Remove the word "alias " from the front
+             command_body = inputs[6:].strip() 
+        
+             # 2. Split exactly once around " as "
+             parts = command_body.split(" as ")
+        
+             path = parts[0].strip()
+             name = parts[1].strip()
+        
+             # 3. Save to your dynamic mapping storage
+             alias[name] = path
+             save_alias(alias)
+        
+             print(f"Successfully mapped {name} -> {path}")
+             logging.info(f"Alias created: {name} AKA {path}")
+        
         except IndexError:
             print("Error: Use format 'alias [path] as [name]'")
             
