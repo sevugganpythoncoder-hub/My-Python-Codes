@@ -37,7 +37,7 @@ print("\nFor best of use make sure to install some of the libraries.[Ignore If n
 py = platform.python_version()
 date = datetime.now()
 print(fr"""
-Python CMD Copyright Access [V.3.0.0/v Advance Standalone Stable] [Future updates?]
+Python CMD Copyright Access [V.3.2.0/v Advance Standalone Stable] [Future updates?]
 64-bit Python {py} | {date}
 Type 'Copyright' or 'help' or 'credits' for more info
 """)
