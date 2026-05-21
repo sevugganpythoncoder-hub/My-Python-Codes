@@ -23,11 +23,11 @@ import win32con
 
 # Starting
 print("""NOTE : ------------------------------------------------------------------
-PYTHON COMMAND INTERFACE (PCI) | v3.0.0 FINAL STABLE BUILD
+PYTHON COMMAND INTERFACE (PCI) | v3.2.0 FINAL STABLE BUILD
 Status: Completed
 ------------------------------------------------------------------
 NOTE: This tool is optimized for System Recovery and Management. 
-All core features (Process Kill, Disk List, Sys-Health) are active.
+All core features (Process Kill, Disk List, Sys-Health,scan-reg) are active.
 This CMD will no longer recieve Updates(This is False).
 ------------------------------------------------------------------
      """)
@@ -207,19 +207,20 @@ while True:
         print("21)   -  view-dir                        -   Shows all Dir's/files inside the Directory you are using to run PythonCMD")
         
         print("\n--- ADVANCED FEATURES ---")
-        print("21)   -  system restore                   -  Creates a backup of the current folder")
+        print("22)   -  system restore                   -  Creates a backup of the current folder")
         print("                                          -  Note: For more info type help['system restore']")
-        print("22)   -  alias [path] as [name]           -  Creates a custom shortcut to a path")
+        print("23)   -  alias [path] as [name]           -  Creates a custom shortcut to a path")
         print("                                          -  Note: For more info type help['alias']")
-        print("23)   -  view aliases                     -  Shows all shortcuts created by you")
+        print("24)   -  view aliases                     -  Shows all shortcuts created by you")
         
         print("\n--- DISK MANAGEMENT (NEW) ---")
-        print("24)   -  diskpart-basic                   -  Safe, Read-Only disk monitoring")
-        print("25)   -  diskpart-advance                 -  Write-Access (Clean/Format) - ADMIN REQ.")
+        print("25)   -  diskpart-basic                   -  Safe, Read-Only disk monitoring")
+        print("26)   -  diskpart-advance                 -  Write-Access (Clean/Format) - ADMIN REQ.")
         
         print("\n--- SECURITY (PCI SUITE) ---")
-        print("26)   -  pci-scan                         -  Scans files for malware/viruses")
-        print("27)   -  pci-verify [file]                -  Verifies if malicious files are system-critical")
+        print("27)   -  pci-scan                         -  Scans files for malware/viruses")
+        print("28)   -  pci-verify [file]                -  Verifies if malicious files are system-critical")
+        print("29)   -  scan-reg                         -  Scans all the Registry Files in user's PC for more info type help['scan-reg']")
         print("--------------------------------------------------------------------------------------------------")
   # copyright
     elif inputs == "copyright":
@@ -359,7 +360,7 @@ while True:
         print("Language       : Python 3.12")
         print("Build/Start Date     : Feb 2026")
         print("End Date :            May 2026")
-        print("Status         : V.3.0.0 Advance Professional Build Stable(Completed?)")
+        print("Status         : V.3.2.0 Advance Professional Build Stable(Completed?)")
         print("---------------------------")
         print("""Special thanks to the PSF for the core engine
          Also to my friends and People for helping me with this endeavour and I Hope This project Helps Everybody
@@ -1002,6 +1003,14 @@ while True:
             
         print(f"\n Batch operation complete. {deleted_count} items purged.\n")
             
+    elif inputs == "help['scan-reg']":
+        print("INFO ON MODULE : scan-reg")
+        
+        print("Usage : Scan-reg is used to find random bytes/keys made by viruses/trojans and other malware to control the OS.")
+        
+        print("More Info : It scans the Registry files[regedit] and highlights/gives the keys which have the most enthropy(randomness).")
+        
+        print("Now again just like pci-scan this module software is not 100% accurate as some system/sys-health files contain same randomness equal to some keys made by viruses.[So don't 100% trust it but since it gives the Keys name's it should be easy to differentiate].")
         
     else:
         print("Command Not In Current Version of Python CMD or there is no existing command")
