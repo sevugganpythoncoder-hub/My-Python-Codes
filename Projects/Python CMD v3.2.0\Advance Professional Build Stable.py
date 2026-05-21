@@ -18,6 +18,8 @@ import math
 import hashlib
 import ctypes
 from datetime import datetime
+import win32api
+import win32con
 
 # Starting
 print("""NOTE : ------------------------------------------------------------------
@@ -904,6 +906,101 @@ while True:
         
         except Exception as e:
             print(f"Error accessing directory: {e}")
+            
+    
+   
+
+    elif inputs == "scan-reg":
+        print("\n Scanning Registry Persistence Hives...")
+    
+        target_paths = [
+        (win32con.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", "HKLM_Run"),
+        (win32con.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", "HKLM_RunOnce"),
+        (win32con.HKEY_CURRENT_USER,  r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", "HKCU_Run"),
+        (win32con.HKEY_CURRENT_USER,  r"SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", "HKCU_RunOnce")
+        ]
+    
+        found_items = []
+    
+        # 1. Gather all data quietly first
+        for root_hive, subkey, label in target_paths:
+            try:
+                hKey = win32api.RegOpenKeyEx(root_hive, subkey, 0, win32con.KEY_READ)
+                index = 0
+                while True:
+                    try:
+                        name, data, _ = win32api.RegEnumValue(hKey, index)
+                        found_items.append({
+                        "hive": root_hive,
+                        "subkey": subkey,
+                        "label": label,
+                        "name": name,
+                        "data": data
+                        })
+                        index += 1
+                    except Exception:
+                        break
+                win32api.RegCloseKey(hKey)
+            except Exception:
+                continue
+
+        if not found_items:
+            print("️ Scan complete. No registry entries detected.\n")
+            continue
+
+        # 2. Render everything into ONE clean, unified ASCII Table
+        print(f"\n️ Detected {len(found_items)} Registry Startup Entries:")
+        print("+" + "-"*4 + "+" + "-"*12 + "+" + "-"*22 + "+" + "-"*42 + "+")
+        print(f"| {'ID'.ljust(2)} | {'Hive'.ljust(10)} | {'Key Name'.ljust(20)} | {'Executable Path'.ljust(40)} |")
+        print("+" + "-"*4 + "+" + "-"*12 + "+" + "-"*22 + "+" + "-"*42 + "+")
+    
+        for idx, item in enumerate(found_items, start=1):
+            # Truncate strings so they don't break the beautiful layout columns
+            display_name = item['name'][:17] + "..." if len(item['name']) > 20 else item['name']
+            display_data = item['data'][:37] + "..." if len(item['data']) > 40 else item['data']
+        
+            print(f"| {str(idx).ljust(2)} | {item['label'].ljust(10)} | {display_name.ljust(20)} | {display_data.ljust(40)} |")
+        
+        print("+" + "-"*4 + "+" + "-"*12 + "+" + "-"*22 + "+" + "-"*42 + "+")
+
+        # 3. Single interactive input prompt at the bottom
+        print("\n Options: Type a single ID (e.g., '3'), multiple IDs separated by commas (e.g., '1,3'), 'all', or 'none'.")
+        action = input(" Selection to OBLITERATE: ").strip().lower()
+    
+        if action == "none" or action == "":
+            print("Skipped. No keys were deleted.\n")
+            continue
+        
+        # Determine targets based on user choice
+        targets_to_delete = []
+        if action == "all":
+            targets_to_delete = found_items
+        else:
+            try:
+                # Parse inputs like "1, 3" into integer indices
+                selected_indices = [int(x.strip()) for x in action.split(",")]
+                for idx in selected_indices:
+                    if 1 <= idx <= len(found_items):
+                        targets_to_delete.append(found_items[idx - 1])
+                    else:
+                        print(f"️ Warning: ID {idx} is out of range. Skipping.")
+            except ValueError:
+                print("❌ Invalid input format. Operation aborted.")
+                continue
+
+        # 4. Execute deletion batch sequentially
+        deleted_count = 0
+        for item in targets_to_delete:
+            try:
+                hKeyWritable = win32api.RegOpenKeyEx(item['hive'], item['subkey'], 0, win32con.KEY_SET_VALUE)
+                win32api.RegDeleteValue(hKeyWritable, item['name'])
+                win32api.RegCloseKey(hKeyWritable)
+                print(f" Destroyed: [{item['label']}] {item['name']}")
+                deleted_count += 1
+            except Exception as e:
+                print(f"Failed to delete {item['name']}: {e}")
+            
+        print(f"\n Batch operation complete. {deleted_count} items purged.\n")
             
         
     else:
