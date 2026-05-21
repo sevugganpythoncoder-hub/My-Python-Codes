@@ -17,6 +17,7 @@ import string
 import math
 import hashlib
 import ctypes
+from datetime import datetime
 
 # Starting
 print("""NOTE : ------------------------------------------------------------------
@@ -32,7 +33,7 @@ This CMD will no longer recieve Updates(This is False).
 print("\nFor best of use make sure to install some of the libraries.[Ignore If not using a raw .py file]")
 
 py = platform.python_version()
-date = datetime.datetime.now()
+date = datetime.now()
 print(fr"""
 Python CMD Copyright Access [V.3.0.0/v Advance Standalone Stable] [Future updates?]
 64-bit Python {py} | {date}
@@ -76,7 +77,7 @@ def save_alias(alias):
 alias = load_alias()
         
 while True:
-    date = datetime.datetime.now()
+    date = datetime.now()
     inputs = input(f"{os.getcwd()}>").lower().strip()
   # Exit
     if inputs == "exit":
@@ -201,6 +202,7 @@ while True:
         print("18)   -  processlist                      -  Shows the first 25 Processes running on PC")
         print("19)   -  pykill                           -  Kills a specified running process")
         print("20)   -  disk-list                        -  Shows available Disk Partitions")
+        print("21)   -  view-dir                        -   Shows all Dir's/files inside the Directory you are using to run PythonCMD")
         
         print("\n--- ADVANCED FEATURES ---")
         print("21)   -  system restore                   -  Creates a backup of the current folder")
@@ -835,6 +837,73 @@ while True:
         diskpart_advance()
         datas.append(f"{name} accessed Diskpart-Advance")
         save_settings(datas)
+    
+    elif inputs.startswith("view-dir"):
+        # 1. Handle custom paths if provided (e.g., 'view-dir X:\Windows'), default to current directory
+        parts = inputs.split(" ", 1)
+        target_path = parts[1].strip() if len(parts) > 1 else "."
+    
+        try:
+            if not os.path.exists(target_path):
+                print(f"Error: Path '{target_path}' does not exist.")
+                continue
+            
+            items = os.listdir(target_path)
+        
+            # Counters for the summary footer
+            file_count = 0
+            dir_count = 0
+            total_file_size = 0
+        
+            # Table Headers
+            print(f"\n Contents of: {os.path.abspath(target_path)}")
+            print("+" + "-"*32 + "+" + "-"*12 + "+" + "-"*22 + "+")
+            print(f"| {'Name'.ljust(30)} | {'Type'.ljust(10)} | {'Modified'.ljust(20)} |")
+            print("+" + "-"*32 + "+" + "-"*12 + "+" + "-"*22 + "+")
+        
+            for item in items:
+                item_path = os.path.join(target_path, item)
+                is_dir = os.path.isdir(item_path)
+            
+                # Update counters and calculate sizes safely
+                if is_dir:
+                    dir_count += 1
+                    item_type = "DIR"
+                else:
+                    file_count += 1
+                    item_type = "FILE"
+                    try:
+                        total_file_size += os.path.getsize(item_path)
+                    except OSError:
+                        pass  # Skip system files that are locked/inaccessible
+            
+                # Get last modified timestamp
+                try:
+                    mtime = os.path.getmtime(item_path)
+                    date_str = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d %H:%M:%S')
+                except OSError:
+                    date_str = "UNKNOWN".ljust(20)
+                
+                # Keep names formatted within table bounds
+                display_name = item[:27] + "..." if len(item) > 30 else item
+            
+                print(f"| {display_name.ljust(30)} | {item_type.ljust(10)} | {date_str.ljust(20)} |")
+            
+            print("+" + "-"*32 + "+" + "-"*12 + "+" + "-"*22 + "+")
+        
+            # 2. Get true free disk space using standard shutil library
+            _, _, free_space = shutil.disk_usage(target_path)
+        
+            # 3. Format figures with classic Windows style commas
+            formatted_file_size = f"{total_file_size:,}"
+            formatted_free_space = f"{free_space:,}"
+        
+            # Classic CMD summary block
+            print(f"               {file_count} File(s)      {formatted_file_size} bytes")
+            print(f"               {dir_count} Dir(s)   {formatted_free_space} bytes free\n")
+        
+        except Exception as e:
+            print(f"Error accessing directory: {e}")
             
         
     else:
