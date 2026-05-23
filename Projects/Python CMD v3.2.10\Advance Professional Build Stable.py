@@ -572,29 +572,24 @@ while True:
         VT_API_KEY = os.getenv("VIRUSTOTAL_API_KEY")
         
         if not VT_API_KEY:
-            # Check if an API key was already appended to your global settings list
-            # We look for a string that is exactly 64 characters long (VT Key standard length)
             saved_key = next((item for item in datas if isinstance(item, str) and len(item) == 64), None)
             
             if saved_key:
                 VT_API_KEY = saved_key
                 print(" Cloud Intelligence Enabled (Loaded saved key from settings).\n")
             else:
-                print("⚠  Notice: No VirusTotal API Key found.")
+                print("⚠️  Notice: No VirusTotal API Key found.")
                 setup_choice = input("[?] Provide a VirusTotal API key for cloud verification? (y/n): ").lower().strip()
                 
                 if setup_choice == 'y':
                     user_key = input(" Paste your VirusTotal API Key: ").strip()
                     if len(user_key) == 64:
                         VT_API_KEY = user_key
-                        
-                        # Append directly to your existing settings list and save it
                         datas.append(user_key)
                         save_settings(datas) 
-                        
-                        print("Key saved to your settings list! Cloud Intelligence Enabled.\n")
+                        print(" Key saved to your settings list! Cloud Intelligence Enabled.\n")
                     else:
-                        print("Invalid key length. Operating in LOCAL-ONLY mode.\n")
+                        print(" Invalid key length. Operating in LOCAL-ONLY mode.\n")
                 else:
                     print(" Operating in LOCAL-ONLY mode using heuristic entropy flags.\n")
         else:
@@ -615,8 +610,11 @@ while True:
         try:
             for target_dir in targets:
                 for root, dirs, files in os.walk(target_dir):
-                    if mode == '1' and target_dir not in root:
-                        if any(x in root for x in ["Windows", "Program Files", "AppData"]):
+                    # ---- FIXED ONEDRIVE/APPDATA BYPASS FILTER ----
+                    if mode == '1':
+                        # Split path elements into a clean list to prevent keyword misfires
+                        path_parts = root.split(os.sep)
+                        if any(x in path_parts for x in ["Windows", "Program Files", "AppData"]):
                             continue
 
                     for file in files:
@@ -662,13 +660,12 @@ while True:
                                                         found_threats.append(full_path)
                                                     
                                                     elif response.status_code == 429:
-                                                        print("⚠ API Rate Limit Hit (4req/min). Falling back entirely to entropy data.")
+                                                        print("⚠️ API Rate Limit Hit (4req/min). Falling back entirely to entropy data.")
                                                         found_threats.append(full_path)
                                                 except Exception as api_err:
-                                                    print(f"⚠ Cloud scan failed ({api_err}). Defaulting to entropy flag.")
+                                                    print(f"⚠️ Cloud scan failed ({api_err}). Defaulting to entropy flag.")
                                                     found_threats.append(full_path)
                                             else:
-                                                # Fallback strictly to entropy tracking if key is missing
                                                 found_threats.append(full_path)
                             except:
                                 pass
