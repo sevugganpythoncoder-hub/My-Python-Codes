@@ -226,7 +226,7 @@ while True:
     elif inputs == "copyright":
         print("-" * 60)
         print("PYTHON COMMAND INTERFACE (PCI) - SYSTEM MANAGEMENT TOOL")
-        print(f"Copyright (c) {datetime.year} {name}. All Rights Reserved.")
+        print(f"Copyright (c) {datetime.now().year} {name}. All Rights Reserved.")
         print("-" * 60)
         print("""
         LEGAL NOTICE:
