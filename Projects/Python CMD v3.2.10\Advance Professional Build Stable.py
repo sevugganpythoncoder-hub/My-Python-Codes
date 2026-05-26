@@ -225,7 +225,7 @@ while True:
         print("28)   -  pci-verify [file]                -  Verifies if malicious files are system-critical")
         print("29)   -  scan-reg                         -  Scans all the Registry Files in user's PC for more info type help['scan-reg']")
         print("--------------------------------------------------------------------------------------------------")
-  # copyright
+  # copyright[MIT License]
     elif inputs == "copyright":
         print("-" * 60)
         print("PYTHON COMMAND INTERFACE (PCI) - SYSTEM MANAGEMENT TOOL")
@@ -249,13 +249,13 @@ while True:
         """)
         print("-" * 60)
         input("Press ENTER to return to the terminal...")
-        
+     #sysinfo
     elif inputs == "sysinfo":
         print(f"OS : {platform.system()} {platform.release()}")
         print(f"Current Version pf py : {py}")
         datas.append(f"{name} checked systeminfo")
         save_settings(datas)
-  
+  # where [command]
     elif inputs.startswith("where "):
         pattern = inputs[6:].strip().lower()
         found = False
@@ -268,7 +268,7 @@ while True:
             print(f"INFO: Could not find '{pattern}' in {os.getcwd()} or subfolders.")
         datas.append(fr" {name} Deep searched: {pattern}")
         save_settings(datas)
-        
+  #del [command]
     elif inputs.startswith("del "):
         filename = inputs[4:].strip()
         try:
@@ -299,6 +299,7 @@ while True:
         save_settings(datas)
         print(datas)
         print("System cleared")
+
     elif inputs == "ip-search":
         print("\nFetching external System data....")
         time.sleep(5)
@@ -312,6 +313,7 @@ while True:
         except requests.exceptions.RequestException as e:
             print(f"404 Error Failed To connect Successfully to server {e} ")
             logging.warning(fr"Exception Failed {e}")
+# weather
     elif inputs == "weather":
         city = input("Check weather for which city?:")
         API = "8b4e2dab8c147748870c641bb2e35446"
@@ -334,6 +336,7 @@ while True:
             print(f"Error Could Not Access Server/Server down : {e}")
             time.sleep(3)
             logging.warning(f"Access to Server failed : {e}. At {date}")
+  # sys-health
     elif inputs == "sys-health":
         print("--- SYSTEM HEALTH DASHBOARD ---")
         try:
@@ -357,7 +360,7 @@ while True:
         except PermissionError as e:
             logging.warning("User System Access denied.")
             print("Error could not access User System")
-            
+  # credits
     elif inputs == "credits":
         print("--- CMD PROJECT CREDITS ---")
         print("Language       : Python 3.12")
@@ -366,40 +369,39 @@ while True:
         print("Status         : V.3.2.1 Advance Professional Build Stable(Completed?)")
         print("---------------------------")
         print("""Special thanks to the PSF for the core engine
-         Also to my friends and People for helping me with this endeavour and I Hope This project Helps Everybody
+         Also to my friends and other People for helping me with this endeavour and I Hope This project Helps Everybody
          Thank You.
         """)
         datas.append("Viewed Credits")
         save_settings(datas)
-        
+     # pykill
     elif inputs.startswith("pykill "):
-        proc_name = inputs[7:].strip()  # Added .strip() to clean up spaces
+        proc_name = inputs[7:].strip()  
         found = False
         
-        # 1. Define the critical system blacklist
         blacklist = ["svchost.exe", "lsass.exe", "wininit.exe", "services.exe", "csrss.exe", "explorer.exe"]
         
         print(fr"Searching for processes Matching name {proc_name}...")
         for proc in psutil.process_iter(["pid", "name"]):
             try:
-                # Basic check to see if the process name exists safely
+                
                 if proc.info["name"] and proc_name.lower() in proc.info["name"].lower():
                     current_proc_name = proc.info["name"].lower()
                     
-                    # 2. Check if the found process is in your blacklist
+                    
                     if current_proc_name in blacklist:
                         print("\n" + "!"*60)
                         print(f" WARNING: {proc.info['name']} (PID: {proc.info['pid']}) is a CRITICAL SYSTEM PROCESS! ".center(60, "="))
                         print(" Terminating this could cause a Blue/black Screen of Death (BSOD). ".center(60, "="))
                         print("!"*60)
                         
-                        # Ask for confirmation (Soft Block)
+                        
                         confirm = input(f"Are you absolutely sure you want to kill {proc.info['name']}? (y/N): ").lower().strip()
                         if confirm != 'y':
                             print(f"Skipped: Termination of {proc.info['name']} aborted by user.\n")
                             continue  # Skips this process and moves to the next one in the loop
                     
-                    # 3. Execution Phase (Runs if not blacklisted OR if user typed 'y')
+                    
                     print(f"Terminating {proc.info['name']} (PID: {proc.info['pid']})...")
                     proc.kill()
                     found = True
@@ -415,7 +417,7 @@ while True:
         else:
             print(f"No Process named {proc_name} or process is unkillable/banned by user.")
             logging.warning(f"{name} tried to kill {proc_name} at {date}")
-            
+     # processlist
     elif inputs == "processlist":
         print(f"{'PID':<8} {'Status':<12} {'Name'}")
         print("-" * 30)
@@ -425,6 +427,7 @@ while True:
                 print(f"{proc.info['pid']:<8} {proc.info['status']:<12} {proc.info['name']}")
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 pass
+     #disk-list
     elif inputs == "disk-list":
         print(f"{'Device':<15} {'Mount':<10} {'Type':<10} {'Total (GB)':<10}")
         print("-" * 50)
@@ -434,7 +437,7 @@ while True:
                 print(f"{part.device:<15} {part.mountpoint:<10} {part.fstype:<10} {usage.total // (1024**3):<10}")
             except (PermissionError, OSError):
                 continue
-
+  # start
     elif inputs.strip() == "start":
         try:
             current_file = os.path.abspath(sys.argv[0])
@@ -444,8 +447,6 @@ while True:
                 subprocess.Popen([current_file], creationflags=subprocess.CREATE_NEW_CONSOLE)
                 logging.info(f"Created instance  by {name} using .exe")
             else:
-                # For .py files, we wrap it in a 'cmd /k' call
-                # '/k' tells the console to "run this command and STAY OPEN"
                 subprocess.Popen(
                 f'cmd /k "{sys.executable} {current_file}"', 
                 creationflags=subprocess.CREATE_NEW_CONSOLE
@@ -457,19 +458,20 @@ while True:
         except Exception as e:
             print(f"ERROR: Could not start new instance: {e}")
             logging.warning(f"Python CMD Failed To open Instance : {e}")
-            
+             
+     # del [command]
+     
     elif inputs.startswith("del "):
         filename = inputs[4:].strip()
         try:
             def deletefile(target):
                 try:
-                    # 1. Check if it's a Directory (Folder) FIRST
+                    
                     if os.path.isdir(target):
                         shutil.rmtree(target)
                         print(f"Path {target} has been removed from system OS")
                         logging.info(f"{name} deleted folder {target}")
                 
-                   # 2. Check if it's a File SECOND
                     elif os.path.isfile(target):
                         os.remove(target)
                         print(f"File {target} has been removed from the system OS")
@@ -485,21 +487,19 @@ while True:
         
         except Exception as exc:
             logging.info(f"{name} logged due to technical error ERROR NO: 0XCB39266")
-            # Optional: change to print(exc) if you don't want the app to close on error
             raise RuntimeError("Error : Exited system Due to Win error")
+             
+     #system-restore
     elif inputs.strip() == "system restore":
         try:
-            # 1. Define what to back up (Current working directory)
             source = os.getcwd()
         
-            # 2. Create a unique folder name using the date and time
             now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             backup_folder = f"Restore_Point_{now}"
         
             print(f"INFO: Initializing System Restore Point: {backup_folder}...")
         
-            # 3. Copy everything. 
-            # ignore_patterns ensures we don't back up the backup folder itself!
+            # Copy everything. 
             shutil.copytree(source, backup_folder, ignore=shutil.ignore_patterns('Restore_Point_*', 'build', 'dist'))
         
             print(f"SUCCESS: Snapshot created at {backup_folder}".center(50, "="))
@@ -508,6 +508,7 @@ while True:
         except Exception as e:
             print("ERROR: System Restore Call Not accepted/Failed")
             logging.warning(f"SYSTEM RESTORE FAILURE")
+     #notes
     elif inputs == "help['systemrestore']":
         print("INFO : Module ['Systemrestore']")
         
@@ -518,19 +519,19 @@ while True:
         print(f"\n NOTE: This Command is for Educational/Emergency Purposes only. This command although Enforced with safety features Can drain your system Space Very quickly as well as Potentially Damage the system.")
         
         print("Use the command When needed and Wisely.You have been Warned.")
-        
+     #alias
     elif inputs.startswith("alias "):
         try:
-             # 1. Remove the word "alias " from the front
+             
              command_body = inputs[6:].strip() 
         
-             # 2. Split exactly once around " as "
+             
              parts = command_body.split(" as ")
         
              path = parts[0].strip()
              name = parts[1].strip()
         
-             # 3. Save to your dynamic mapping storage
+             #save
              alias[name] = path
              save_alias(alias)
         
@@ -539,7 +540,8 @@ while True:
         
         except IndexError:
             print("Error: Use format 'alias [path] as [name]'")
-            
+     
+     #notes       
     elif inputs == "help['alias']":
         print("\nINFO: MODULE ['alias']")
         print("PURGE: Creates a persistent shortcut for long directory paths.")
@@ -547,7 +549,8 @@ while True:
         print("RESULT: Typing 'cd DL' will now move you to that folder instantly.")
         print("DATA: Aliases are stored in 'aliases.json' for persistent use.")
         print("---------------------------------")
-        
+         
+     #view-alias
     elif inputs == "view aliases":
         if not alias:
             print("INFO: No aliases found in aliases.json")
@@ -563,12 +566,11 @@ while True:
             except Exception as e:
                 print(f"Error: Unable To Access alias.json : {e}")
                 logging.warning("Sys.alias failed")
-                
+     #pci-scan     
     elif inputs == "pci-scan":
 
         print("\n--- PCI ANTIVIRUS: HYBRID SCANNING ---")
         
-        # ---- LIVE APPLICATION API KEY LOADER FROM EXISTNG LIST ----
         VT_API_KEY = os.getenv("VIRUSTOTAL_API_KEY")
         
         if not VT_API_KEY:
@@ -578,7 +580,7 @@ while True:
                 VT_API_KEY = saved_key
                 print(" Cloud Intelligence Enabled (Loaded saved key from settings).\n")
             else:
-                print("⚠️  Notice: No VirusTotal API Key found.")
+                print("  Notice: No VirusTotal API Key found.")
                 setup_choice = input("[?] Provide a VirusTotal API key for cloud verification? (y/n): ").lower().strip()
                 
                 if setup_choice == 'y':
@@ -610,9 +612,8 @@ while True:
         try:
             for target_dir in targets:
                 for root, dirs, files in os.walk(target_dir):
-                    # ---- FIXED ONEDRIVE/APPDATA BYPASS FILTER ----
                     if mode == '1':
-                        # Split path elements into a clean list to prevent keyword misfires
+                        
                         path_parts = root.split(os.sep)
                         if any(x in path_parts for x in ["Windows", "Program Files", "AppData"]):
                             continue
@@ -620,22 +621,21 @@ while True:
                     for file in files:
                         file_count += 1
                         
-                        # 1. HEURISTIC EXTENSION FILTER
+                       
                         if any(file.lower().endswith(ex) for ex in ['.exe', '.bat', '.js', '.py', '.scr', '.vbs', '.msi']):
                             try:
                                 full_path = os.path.join(root, file)
                                 with open(full_path, "rb") as f:
                                     data = f.read(10240)
                                     if data:
-                                        # Calculate local Shannon Entropy
                                         p = [data.count(i)/len(data) for i in range(256)]
                                         ent = -sum(x * math.log(x, 2) for x in p if x > 0)
                                         
-                                        # First-Stage Trigger: High Entropy Detected
+          
                                         if ent > 7.7:
                                             print(f"\n[!] High Entropy ({ent:.2f}) flag: {file}")
                                             
-                                            # Second-Stage Trigger: Cloud Verification via VirusTotal
+                                            
                                             if VT_API_KEY:
                                                 print("    Querying global malware database...")
                                                 file_hash = hashlib.sha256(data).hexdigest()
@@ -660,17 +660,17 @@ while True:
                                                         found_threats.append(full_path)
                                                     
                                                     elif response.status_code == 429:
-                                                        print("⚠️ API Rate Limit Hit (4req/min). Falling back entirely to entropy data.")
+                                                        print(" API Rate Limit Hit (4req/min). Falling back entirely to entropy data.")
                                                         found_threats.append(full_path)
                                                 except Exception as api_err:
-                                                    print(f"⚠️ Cloud scan failed ({api_err}). Defaulting to entropy flag.")
+                                                    print(f" Cloud scan failed ({api_err}). Defaulting to entropy flag.")
                                                     found_threats.append(full_path)
                                             else:
                                                 found_threats.append(full_path)
                             except:
                                 pass
 
-                        # 2. THE SINGLE-LINE UI
+                        #UI
                         if file_count % 100 == 0:
                             elapsed = int(time.time() - start_time)
                             min_e, sec_e = divmod(elapsed, 60)
@@ -699,7 +699,7 @@ while True:
                     except Exception as e:
                         print(f"[ERROR] Could not delete {os.path.basename(threat_path)}: {e}")
     
-    
+    #notes
     elif inputs == "help['pci-scan']":
 
         print("\nINFO ON MODULE : 'pci-scan' ")
@@ -726,12 +726,12 @@ while True:
 
         print(fr"NOTE(Update): Using VirusTotal's API keys and it's database the pci-scan module can finally distinguish b/w false postives and real-positive(given that you gave the key to the System) So now this scanner is officially 99.9% accurate(that +0.01% away from 100% is when a new virus is made it will not be seen as virus in Virustotal databse but dont worry maybe enthopy will help you out.) ")
     
+     #pci-verify
+     
     elif inputs.startswith("pci-verify "):
-        # Use .strip() with arguments to clear any accidental drag-and-drop quotes
         file_path = inputs[11:].strip().strip('"').strip("'")
         
         if os.path.exists(file_path):
-            # NEW CHECK: Prevent directory crashes using os.path.isdir
             if os.path.isdir(file_path):
                 print("ERROR: Target is a directory. 'pci-verify' only works on specific files.")
             else:
@@ -750,7 +750,7 @@ while True:
                     print(f"ERROR: Could not read file. {e}")
         else:
             print("ERROR: File not found. Check the path spelling.")
-    
+    #notes
     elif inputs == "help['pci-verify']":
         print("\nINFO ON MODULE : 'pci-verify' ")
         print("USAGE : Generates a unique SHA-256 digital fingerprint for a file.")
@@ -764,16 +764,14 @@ while True:
     
         print("\nNOTE: This does NOT delete files. It only provides information.")
     
-    
+    #vol
     elif inputs == "vol":
         def pci_vol(drive_letter="C:"):
             try:
-                # 1. Get the Serial Number using a background system call
-                # We filter the output of the Windows 'vol' command
                 raw_vol = subprocess.check_output(f"vol {drive_letter}", shell=True).decode()
                 serial = raw_vol.split("Number is")[-1].strip()
 
-                # 2. Get the Drive Type and Status using psutil
+                #Drive Type 
                 partitions = psutil.disk_partitions()
                 drive_data = next((p for p in partitions if p.mountpoint.startswith(drive_letter)), None)
         
@@ -793,7 +791,7 @@ while True:
 
 
         pci_vol("C:")
-    
+    #ds-b
     elif inputs == "diskpart-basic":
         def help_diskpart_bs():
             print("\n" + "="*50)
@@ -816,7 +814,7 @@ while True:
                     break
             
                 elif cmd == "list disk":
-                    # Shows Physical Drives (Using psutil.disk_usage logic)
+                    # Shows Physical Drives
                     print(f"\n{'Disk ###':<10} {'Status':<10} {'Size':<10} {'Free':<10}")
                     print("-" * 45)
                     # We treat the root of partitions as the 'disks' for basic mode
@@ -826,12 +824,13 @@ while True:
                             print(f"Disk {i:<5} Online     {usage.total // (1024**3):<3} GB    {usage.free // (1024**3):<3} GB")
 
                 elif cmd == "list volume":
-                    # Shows Logical Volumes (Drive Letters and File Systems)
+                    # Shows Logical Volumes 
                     print(f"\n{'Volume ###':<12} {'Ltr':<5} {'Label':<12} {'Fs':<6} {'Type'}")
                     print("-" * 55)
                     for i, part in enumerate(psutil.disk_partitions()):
                         d_type = "Partition" if "fixed" in part.opts else "Removable"
                         print(f"Volume {i:<5} {part.mountpoint:<5} {'SYS_OS':<12} {part.fstype:<6} {d_type}")
+                         
                 elif cmd == "help-bs":
                     help_diskpart_bs()
                 else:
@@ -839,7 +838,7 @@ while True:
         diskpart_basic()
         datas.append(f"{name} accessed Diskpart-Basic")
         save_settings(datas)
-                    
+     #ds-a       
     elif inputs == "diskpart-advance":
         def help_diskpart_ad():
             print("\n" + "!"*50)
@@ -855,7 +854,7 @@ while True:
             print("\nREQUIRED: Must run PCI as Administrator or access in WinRE.")
             print("!"*50 + "\n")
         def diskpart_advance():
-            # 1. Check for Admin immediately
+            # 1. Check for Admin
             if not ctypes.windll.shell32.IsUserAnAdmin():
                 print("\n" + "!"*50)
                 print(" ERROR: ADMINISTRATIVE PRIVILEGES REQUIRED ".center(50, "!"))
@@ -872,7 +871,7 @@ while True:
             while True:
                 cmd = input("DISKPARTad> ").lower().strip()
                 if cmd == "exit":
-                    # Clean up any leftover temp scripts before leaving
+                    # Clean up 
                     if os.path.exists("pci_script.txt"):
                         os.remove("pci_script.txt")
                         break
@@ -881,7 +880,6 @@ while True:
                     help_diskpart_ad()
 
                 elif cmd == "list disk" or cmd == "list volume":
-                    # We use /s to run a one-line script so the window stays open long enough to read
                     with open("pci_script.txt", "w") as f:
                         f.write(cmd)
                     subprocess.run("diskpart /s pci_script.txt", shell=True)
@@ -899,15 +897,14 @@ while True:
                     
                     logging.warning(f"{name} modified Diskpart")
                 
-                    # We use capture_output=False so you can see the real Diskpart success message
                 else:
                     print(f"'{cmd}' not recognized. Use 'list disk' or 'select disk X'.")
         diskpart_advance()
         datas.append(f"{name} accessed Diskpart-Advance")
         save_settings(datas)
-    
+         
+    #view-dir
     elif inputs.startswith("view-dir"):
-        # 1. Handle custom paths if provided (e.g., 'view-dir X:\Windows'), default to current directory
         parts = inputs.split(" ", 1)
         target_path = parts[1].strip() if len(parts) > 1 else "."
     
@@ -918,12 +915,10 @@ while True:
             
             items = os.listdir(target_path)
         
-            # Counters for the summary footer
             file_count = 0
             dir_count = 0
             total_file_size = 0
         
-            # Table Headers
             print(f"\n Contents of: {os.path.abspath(target_path)}")
             print("+" + "-"*32 + "+" + "-"*12 + "+" + "-"*22 + "+")
             print(f"| {'Name'.ljust(30)} | {'Type'.ljust(10)} | {'Modified'.ljust(20)} |")
@@ -945,14 +940,12 @@ while True:
                     except OSError:
                         pass  # Skip system files that are locked/inaccessible
             
-                # Get last modified timestamp
                 try:
                     mtime = os.path.getmtime(item_path)
                     date_str = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d %H:%M:%S')
                 except OSError:
                     date_str = "UNKNOWN".ljust(20)
                 
-                # Keep names formatted within table bounds
                 display_name = item[:27] + "..." if len(item) > 30 else item
             
                 print(f"| {display_name.ljust(30)} | {item_type.ljust(10)} | {date_str.ljust(20)} |")
@@ -962,11 +955,10 @@ while True:
             # 2. Get true free disk space using standard shutil library
             _, _, free_space = shutil.disk_usage(target_path)
         
-            # 3. Format figures with classic Windows style commas
+            # 3. Format 
             formatted_file_size = f"{total_file_size:,}"
             formatted_free_space = f"{free_space:,}"
         
-            # Classic CMD summary block
             print(f"               {file_count} File(s)      {formatted_file_size} bytes")
             print(f"               {dir_count} Dir(s)   {formatted_free_space} bytes free\n")
         
@@ -975,7 +967,7 @@ while True:
             
     
    
-
+#scan-reg
     elif inputs == "scan-reg":
         print("\n Scanning Registry Persistence Hives...")
     
@@ -1014,7 +1006,7 @@ while True:
             print("️ Scan complete. No registry entries detected.\n")
             continue
 
-        # 2. Render everything into ONE clean, unified ASCII Table
+        # ASCII table
         print(f"\n️ Detected {len(found_items)} Registry Startup Entries:")
         print("+" + "-"*4 + "+" + "-"*12 + "+" + "-"*22 + "+" + "-"*42 + "+")
         print(f"| {'ID'.ljust(2)} | {'Hive'.ljust(10)} | {'Key Name'.ljust(20)} | {'Executable Path'.ljust(40)} |")
@@ -1037,7 +1029,7 @@ while True:
             print("Skipped. No keys were deleted.\n")
             continue
         
-        # Determine targets based on user choice
+        
         targets_to_delete = []
         if action == "all":
             targets_to_delete = found_items
@@ -1051,10 +1043,9 @@ while True:
                     else:
                         print(f"️ Warning: ID {idx} is out of range. Skipping.")
             except ValueError:
-                print("❌ Invalid input format. Operation aborted.")
+                print(" Invalid input format. Operation aborted.")
                 continue
 
-        # 4. Execute deletion batch sequentially
         deleted_count = 0
         for item in targets_to_delete:
             try:
@@ -1067,7 +1058,7 @@ while True:
                 print(f"Failed to delete {item['name']}: {e}")
             
         print(f"\n Batch operation complete. {deleted_count} items purged.\n")
-            
+ #notes
     elif inputs == "help['scan-reg']":
         print("INFO ON MODULE : scan-reg")
         
