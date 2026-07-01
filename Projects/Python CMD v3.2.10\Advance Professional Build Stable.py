@@ -33,12 +33,12 @@ import math
 
 # Starting
 print(f"""{GREEN}NOTE : ------------------------------------------------------------------
-PYTHON COMMAND INTERFACE (PCI) | v3.2.1 FINAL STABLE BUILD
+PYTHON COMMAND INTERFACE (PCI) | v4.0.0 FINAL STABLE BUILD
 Status: Completed
 ------------------------------------------------------------------
 NOTE: This tool is optimized for System Recovery and Management. 
 All core features (Process Kill, Disk List, Sys-Health,scan-reg) are active.
-This CMD will no longer recieve Updates(This is False).
+This CMD will no longer recieve Updates(This is True now).
 ------------------------------------------------------------------{RESET}
      """)
 
@@ -349,8 +349,8 @@ while True:
         print("--- CMD PROJECT CREDITS ---")
         print("Language       : Python 3.12")
         print("Build/Start Date     : Feb 2026")
-        print("End Date :            May 2026")
-        print("Status         : V.3.2.1 Advance Professional Build Stable(Completed?)")
+        print("End Date :            July 2026(Offcially)")
+        print("Status         : V.4.0.0 Modern Professional Build Stable(Completed)")
         print("---------------------------")
         print("""Special thanks to the PSF for the core engine
          Also to my friends and other People for helping me with this endeavour and I Hope This project Helps Everybody
