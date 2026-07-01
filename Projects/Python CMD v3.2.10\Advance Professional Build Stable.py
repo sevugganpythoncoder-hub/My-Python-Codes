@@ -39,10 +39,10 @@ Status: Completed
 NOTE: This tool is optimized for System Recovery and Management. 
 All core features (Process Kill, Disk List, Sys-Health,scan-reg) are active.
 This CMD will no longer recieve Updates(This is False).
-------------------------------------------------------------------{GREEN}
+------------------------------------------------------------------{RESET}
      """)
 
-print("\nFor best of use make sure to install some of the libraries.[Ignore If not using a raw .py file]")
+print(f"{RED}\nFor best of use make sure to install some of the libraries.[Ignore If not using a raw .py file]{RESET}")
 
 py = platform.python_version()
 date = datetime.now()
@@ -53,7 +53,7 @@ Type 'Copyright' or 'help' or 'credits' for more info
 """)
 
 # Inputs
-name = input("Enter name:")
+name = input(f"{YELLOW}Enter name:{RESET}")
 print("\nStarting CMD.....")
 time.sleep(4)
 
@@ -94,7 +94,7 @@ while True:
   # Exit
     if inputs == "exit":
         logging.info(f"{name} Exited the CMD at {date}")
-        print("Thank You for choosing Python CMD.")
+        print(f"{GREEN}Thank You for choosing Python CMD.{RESET}")
         print("Exiting...")
         time.sleep(3)
         sys.exit()
@@ -121,14 +121,14 @@ while True:
     elif inputs.startswith("run "):
         command = inputs[4:]
         subprocess.run(command, shell=True)
-        logging.info(f"{name} executed system command: {command}")
+        logging.info(f"{RED}{name} executed system command: {command}{RESET}")
         datas.append(command)
         save_settings(datas)
   # cd [command]
     elif inputs == "cd" or inputs.startswith("cd "):
         path = inputs[3:].strip()
         if not path:
-            print("Exited Safely Due to error")
+            print(f"{YELLOW}Exited Safely Due to error{RESET}")
             print(os.getcwd())
         else:
             if path in alias:
@@ -139,15 +139,15 @@ while True:
             try:
                 os.chdir(path)
                 logging.info(f"{name} checked {path} at {date}")
-                print(f"Moved to: {os.getcwd()}")
+                print(f"{RED}Moved to: {os.getcwd()}{RESET}")
                 datas.append(f"Changed to {path}")
                 save_settings(datas)
             except FileNotFoundError:
-                print("Such file is not found in Directory")
+                print(f"{RED}Such file is not found in Directory{RESET}")
                 logging.warning("File not found!!!")
                 
             except Exception as e:
-                    print(f"Error : {e}")
+                    print(f"{RED}Error : {e}{RESET}")
                     logging.warning("File Exception Error!!")
  # file [Source,destination]      
     elif inputs == "file":
@@ -158,22 +158,22 @@ while True:
         try:
             if action == "cp":
                 shutil.copy(source, destination)
-                print("File copied successfully.")
+                print(f"{GREEN}File copied successfully.{RESET}")
             elif action == "mv":
                 shutil.move(source, destination)
-                print("File moved successfully.")
+                print(f"{GREEN}File moved successfully.{RESET}")
         
             datas.append(f"{action} from {source} to {destination}")
             save_settings(datas)
         
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"{RED}Error: {e}{RESET}")
   # systemdata        
     elif inputs == "systemdata":
         hostname = socket.gethostname()
         ip_address = socket.gethostbyname(hostname)
-        print(f"Device: {hostname}, Ip : {ip_address}")
-        logging.info(f"Device: {hostname}, Ip : {ip_address}")
+        print(f"{YELLOW}Device: {hostname}, Ip : {ip_address}")
+        logging.info(f"Device: {hostname}, Ip : {ip_address}{RESET}")
   # cmd history
     elif inputs == "cmd history":
         print(f"History : {datas}")
@@ -238,7 +238,7 @@ while True:
         print("PYTHON COMMAND INTERFACE (PCI) - SYSTEM MANAGEMENT TOOL")
         print(f"Copyright (c) {datetime.now().year} Sevuggan. All Rights Reserved.")
         print("-" * 60)
-        print("""
+        print("""{GREEN}
         LEGAL NOTICE:
         This software is provided "as is", without warranty of any kind, 
         express or implied, including but not limited to the warranties 
@@ -252,7 +252,7 @@ while True:
         the software.
 
         UNAUTHORIZED REPLICATION OR DISTRIBUTION OF THIS SOURCE CODE 
-        IS STRICTLY PROHIBITED.
+        IS STRICTLY PROHIBITED.{RESET}
         """)
         print("-" * 60)
         input("Press ENTER to return to the terminal...")
@@ -277,7 +277,7 @@ while True:
         save_settings(datas)
              
     elif inputs == "clear history":
-        print(f"Clearing {name}'s CMD history....")
+        print(f"{RED}Clearing {name}'s CMD history....{RESET}")
         time.sleep(10)
         datas = []
         save_settings(datas)
@@ -295,7 +295,7 @@ while True:
             save_settings(datas)
             logging.info(f"{name} fetched external IP successfully.")
         except requests.exceptions.RequestException as e:
-            print(f"404 Error Failed To connect Successfully to server {e} ")
+            print(f"{YELLOW}404 Error Failed To connect Successfully to server {e} {RESET}")
             logging.warning(fr"Exception Failed {e}")
 # weather
     elif inputs == "weather":
@@ -375,15 +375,15 @@ while True:
                     
                     if current_proc_name in blacklist:
                         print("\n" + "!"*60)
-                        print(f" WARNING: {proc.info['name']} (PID: {proc.info['pid']}) is a CRITICAL SYSTEM PROCESS! ".center(60, "="))
-                        print(" Terminating this could cause a Blue/black Screen of Death (BSOD). ".center(60, "="))
+                        print(f" {RED}WARNING: {proc.info['name']} (PID: {proc.info['pid']}) is a CRITICAL SYSTEM PROCESS! ".center(60, "="))
+                        print(" Terminating this could cause a Blue/black Screen of Death (BSOD).{RESET} ".center(60, "="))
                         print("!"*60)
                         
                         
                         confirm = input(f"Are you absolutely sure you want to kill {proc.info['name']}? (y/N): ").lower().strip()
                         if confirm != 'y':
-                            print(f"Skipped: Termination of {proc.info['name']} aborted by user.\n")
-                            continue  # Skips this process and moves to the next one in the loop
+                            print(f"{YELLOW}Skipped: Termination of {proc.info['name']} aborted by user{RESET}.\n")
+                            continue 
                     
                     
                     print(f"Terminating {proc.info['name']} (PID: {proc.info['pid']})...")
@@ -394,7 +394,7 @@ while True:
                 pass
 
         if found:
-            print("Process(es) terminated.")
+            print(f"{GREEN}Process(es) terminated.{RESET}")
             logging.info(f"{name} killed process: {proc_name} at {date}")
             datas.append(f"{name} Killed {proc_name} Successfully!")
             save_settings(datas)
@@ -465,7 +465,7 @@ while True:
                         print("ERROR : File/Path Not Found".center(50,"-"))
             
                 except PermissionError:
-                    print(" ERROR : Access Denied (Run as Admin) ".center(50, "!"))
+                    print(F"{RED} ERROR : Access Denied (Run as Admin) {RESET}".center(50, "!"))
 
                 deletefile(filename) 
         
@@ -475,6 +475,7 @@ while True:
              
      #system-restore
     elif inputs.strip() == "system restore":
+        print(f"{RED}You are using system restore be careful{RESET}")
         try:
             source = os.getcwd()
         
@@ -537,7 +538,7 @@ while True:
      #view-alias
     elif inputs == "view aliases":
         if not alias:
-            print("INFO: No aliases found in aliases.json")
+            print(F"{YELLOW}INFO: No aliases found in aliases.json{RESET}")
         else:
             try:
                 print("\n--- CURRENT SYSTEM ALIASES ---")
@@ -562,9 +563,9 @@ while True:
             
             if saved_key:
                 VT_API_KEY = saved_key
-                print(" Cloud Intelligence Enabled (Loaded saved key from settings).\n")
+                print(f"{GREEN} Cloud Intelligence Enabled (Loaded saved key from settings){RESET}.\n")
             else:
-                print("  Notice: No VirusTotal API Key found.")
+                print(f"{RED}  Notice: No VirusTotal API Key found.{RESET}")
                 setup_choice = input("[?] Provide a VirusTotal API key for cloud verification? (y/n): ").lower().strip()
                 
                 if setup_choice == 'y':
@@ -573,9 +574,9 @@ while True:
                         VT_API_KEY = user_key
                         datas.append(user_key)
                         save_settings(datas) 
-                        print(" Key saved to your settings list! Cloud Intelligence Enabled.\n")
+                        print(" {GREEN}Key saved to your settings list! Cloud Intelligence Enabled{RESET}.\n")
                     else:
-                        print(" Invalid key length. Operating in LOCAL-ONLY mode.\n")
+                        print(f"{RED} Invalid key length. Operating in LOCAL-ONLY mode{RESET}.\n")
                 else:
                     print(" Operating in LOCAL-ONLY mode using heuristic entropy flags.\n")
         else:
@@ -667,7 +668,7 @@ while True:
                             print(status.ljust(80), end='', flush=True)
 
         except KeyboardInterrupt:
-            print("\n\n[!] Aborted.")
+            print(f"{YELLOW}\n\n[!] Aborted{RESET}.")
 
         print(f"\n\nSCAN COMPLETE | VERIFIED THREATS: {len(found_threats)} | TOTAL FILES CHECKED: {file_count}")
         
@@ -755,12 +756,12 @@ while True:
                 raw_vol = subprocess.check_output(f"vol {drive_letter}", shell=True).decode()
                 serial = raw_vol.split("Number is")[-1].strip()
 
-                #Drive Type 
+                 
                 partitions = psutil.disk_partitions()
                 drive_data = next((p for p in partitions if p.mountpoint.startswith(drive_letter)), None)
         
                 if drive_data:
-                    # Human-readable translation
+                    
                     drive_type = "Local Disk" if "fixed" in drive_data.opts else "Removable Drive"
                     access = "Read/Write" if "rw" in drive_data.opts else "Read-Only"
             
@@ -801,7 +802,7 @@ while True:
                     # Shows Physical Drives
                     print(f"\n{'Disk ###':<10} {'Status':<10} {'Size':<10} {'Free':<10}")
                     print("-" * 45)
-                    # We treat the root of partitions as the 'disks' for basic mode
+                    
                     for i, part in enumerate(psutil.disk_partitions()):
                         if 'fixed' in part.opts:
                             usage = psutil.disk_usage(part.mountpoint)
@@ -818,7 +819,7 @@ while True:
                 elif cmd == "help-bs":
                     help_diskpart_bs()
                 else:
-                    print(f"'{cmd}' is not recognized in Basic mode.")
+                    print(f"{YELLOW}'{cmd}' is not recognized in Basic mode.{RESET}")
         diskpart_basic()
         datas.append(f"{name} accessed Diskpart-Basic")
         save_settings(datas)
@@ -838,7 +839,7 @@ while True:
             print("\nREQUIRED: Must run PCI as Administrator or access in WinRE.")
             print("!"*50 + "\n")
         def diskpart_advance():
-            # 1. Check for Admin
+            
             if not ctypes.windll.shell32.IsUserAnAdmin():
                 print("\n" + "!"*50)
                 print(" ERROR: ADMINISTRATIVE PRIVILEGES REQUIRED ".center(50, "!"))
@@ -877,7 +878,7 @@ while True:
                         subprocess.run("diskpart /s pci_script.txt", shell=True)
                         print("Command Sent to System Controller.")
                     else:
-                        print("Operation Aborted.")
+                        print(f"{YELLOW}Operation Aborted.{RESET}")
                     
                     logging.warning(f"{name} modified Diskpart")
                 
@@ -912,7 +913,7 @@ while True:
                 item_path = os.path.join(target_path, item)
                 is_dir = os.path.isdir(item_path)
             
-                # Update counters and calculate sizes safely
+                
                 if is_dir:
                     dir_count += 1
                     item_type = "DIR"
@@ -947,7 +948,7 @@ while True:
             print(f"               {dir_count} Dir(s)   {formatted_free_space} bytes free\n")
         
         except Exception as e:
-            print(f"Error accessing directory: {e}")
+            print(f"{YELLOW}Error accessing directory: {e}{RESET}")
             
     
    
@@ -964,7 +965,7 @@ while True:
     
         found_items = []
     
-        # 1. Gather all data quietly first
+        
         for root_hive, subkey, label in target_paths:
             try:
                 hKey = win32api.RegOpenKeyEx(root_hive, subkey, 0, win32con.KEY_READ)
@@ -987,13 +988,13 @@ while True:
                 continue
 
         if not found_items:
-            print("️ Scan complete. No registry entries detected.\n")
+            print(f"️{GREEN} Scan complete. No registry entries detected.{GREEN}\n")
             continue
 
         # ASCII table
-        print(f"\n️ Detected {len(found_items)} Registry Startup Entries:")
+        print(f"\n️{RED} Detected {len(found_items)} Registry Startup Entries{RESET}:")
         print("+" + "-"*4 + "+" + "-"*12 + "+" + "-"*22 + "+" + "-"*42 + "+")
-        print(f"| {'ID'.ljust(2)} | {'Hive'.ljust(10)} | {'Key Name'.ljust(20)} | {'Executable Path'.ljust(40)} |")
+        print(f"{RED}| {'ID'.ljust(2)} | {'Hive'.ljust(10)} | {'Key Name'.ljust(20)} | {'Executable Path'.ljust(40)}{RESET} |")
         print("+" + "-"*4 + "+" + "-"*12 + "+" + "-"*22 + "+" + "-"*42 + "+")
     
         for idx, item in enumerate(found_items, start=1):
@@ -1005,7 +1006,7 @@ while True:
         
         print("+" + "-"*4 + "+" + "-"*12 + "+" + "-"*22 + "+" + "-"*42 + "+")
 
-        # 3. Single interactive input prompt at the bottom
+       
         print("\n Options: Type a single ID (e.g., '3'), multiple IDs separated by commas (e.g., '1,3'), 'all', or 'none'.")
         action = input(" Selection to OBLITERATE: ").strip().lower()
     
@@ -1039,7 +1040,7 @@ while True:
                 print(f" Destroyed: [{item['label']}] {item['name']}")
                 deleted_count += 1
             except Exception as e:
-                print(f"Failed to delete {item['name']}: {e}")
+                print(f"{RED} Error: Failed to delete {item['name']}: {e}{RESET}")
             
         print(f"\n Batch operation complete. {deleted_count} items purged.\n")
  #notes
