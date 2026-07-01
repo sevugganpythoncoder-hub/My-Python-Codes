@@ -1,4 +1,11 @@
 # All Modules used
+import colorama
+from colorama import Fore, Back, Style
+colorama.init(autoreset=True)
+RED = Fore.RED
+GREEN = Fore.GREEN
+YELLOW = Fore.YELLOW
+RESET = Style.RESET_ALL
 import sys
 import os
 import datetime
@@ -25,14 +32,14 @@ import requests
 import math
 
 # Starting
-print("""NOTE : ------------------------------------------------------------------
+print({GREEN}"""NOTE : ------------------------------------------------------------------
 PYTHON COMMAND INTERFACE (PCI) | v3.2.1 FINAL STABLE BUILD
 Status: Completed
 ------------------------------------------------------------------
 NOTE: This tool is optimized for System Recovery and Management. 
 All core features (Process Kill, Disk List, Sys-Health,scan-reg) are active.
 This CMD will no longer recieve Updates(This is False).
-------------------------------------------------------------------
+------------------------------------------------------------------{GREEN}
      """)
 
 print("\nFor best of use make sure to install some of the libraries.[Ignore If not using a raw .py file]")
@@ -506,17 +513,17 @@ while True:
              parts = command_body.split(" as ")
         
              path = parts[0].strip()
-             name = parts[1].strip()
+             alias_name = parts[1].strip()
         
              #save
-             alias[name] = path
+             alias[alias_name] = path
              save_alias(alias)
         
-             print(f"Successfully mapped {name} -> {path}")
-             logging.info(f"Alias created: {name} AKA {path}")
+             print(f"Successfully mapped {alias_name} -> {path}")
+             logging.info(f"Alias created: {alias_name} AKA {path}")
         
         except IndexError:
-            print("Error: Use format 'alias [path] as [name]'")
+            print("Error: Use format 'alias [path] as [alias_name]'")
      
      #notes       
     elif inputs == "help['alias']":
