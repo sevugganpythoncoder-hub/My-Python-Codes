@@ -32,7 +32,7 @@ import requests
 import math
 
 # Starting
-print({GREEN}"""NOTE : ------------------------------------------------------------------
+print(f"""{GREEN}NOTE : ------------------------------------------------------------------
 PYTHON COMMAND INTERFACE (PCI) | v3.2.1 FINAL STABLE BUILD
 Status: Completed
 ------------------------------------------------------------------
