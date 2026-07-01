@@ -477,26 +477,26 @@ while True:
     elif inputs.strip() == "system restore":
         print(f"{RED}You are using system restore be careful{RESET}")
         try:
-        source = os.getcwd()
-        now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            source = os.getcwd()
+            now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         
        
-        parent_dir = os.path.dirname(source)
-        backup_folder = os.path.join(parent_dir, f"PCI_Restore_Point_{now}")
+            parent_dir = os.path.dirname(source)
+            backup_folder = os.path.join(parent_dir, f"PCI_Restore_Point_{now}")
     
-        print(f"{YELLOW}INFO: Initializing System Restore Point outside current path...{RESET}")
-        print(f"Target location: {backup_folder}")
+            print(f"{YELLOW}INFO: Initializing System Restore Point outside current path...{RESET}")
+            print(f"Target location: {backup_folder}")
     
        
-        shutil.copytree(source, backup_folder)
+            shutil.copytree(source, backup_folder)
     
-        print(f"{GREEN}SUCCESS: Snapshot created successfully!{RESET}".center(50, "="))
-        datas.append(f"{name} Created System Restore Point: {now}")
-        save_settings(datas)
+            print(f"{GREEN}SUCCESS: Snapshot created successfully!{RESET}".center(50, "="))
+            datas.append(f"{name} Created System Restore Point: {now}")
+            save_settings(datas)
          
-    except Exception as e:
-        print(f"{RED}ERROR: System Restore Call Failed: {e}{RESET}")
-        logging.warning(f"SYSTEM RESTORE FAILURE: {e}")
+        except Exception as e:
+            print(f"{RED}ERROR: System Restore Call Failed: {e}{RESET}")
+            logging.warning(f"SYSTEM RESTORE FAILURE: {e}")
 
      #notes
     elif inputs == "help['systemrestore']":
